@@ -36,9 +36,7 @@ export function MyCanonPage({ session, canon, agent }: MyCanonPageProps) {
   const [editingCategory, setEditingCategory] = useState<CanonCategory | null>(null);
 
   const nextMissingCategory = useMemo(() => {
-    if (!canon) {
-      return 'person';
-    }
+    if (!canon) return 'person';
     return canonCategories.find((category) => canon.canon[category] === null) ?? null;
   }, [canon]);
 
@@ -49,9 +47,7 @@ export function MyCanonPage({ session, canon, agent }: MyCanonPageProps) {
   const saveCategory = async (category: CanonCategory, value: { title: string; rationale: string }) => {
     const response = await fetch(`/api/canon/${category}`, {
       method: 'PUT',
-      headers: {
-        'content-type': 'application/json',
-      },
+      headers: { 'content-type': 'application/json' },
       body: JSON.stringify(value),
     });
 
@@ -59,25 +55,18 @@ export function MyCanonPage({ session, canon, agent }: MyCanonPageProps) {
     if (!response.ok) {
       throw new Error(json?.error ?? `Failed to save ${category}`);
     }
-
     router.refresh();
   };
 
   const shareCanon = async () => {
-    if (!canon) {
-      return;
-    }
-
+    if (!canon) return;
     if (!MiniKit.isInWorldApp()) {
-      toast.error({ title: 'Open Canon in World App to share in World Chat.' });
+      toast.error({ title: 'Open Canon in World App to share.' });
       return;
     }
-
     try {
       const publicUrl = `${window.location.origin}/u/${canon.slug}`;
-      await MiniKit.chat({
-        message: buildWorldChatShareMessage(canon, publicUrl),
-      });
+      await MiniKit.chat({ message: buildWorldChatShareMessage(canon, publicUrl) });
     } catch (error) {
       toast.error({ title: error instanceof Error ? error.message : 'Share failed' });
     }
@@ -86,9 +75,9 @@ export function MyCanonPage({ session, canon, agent }: MyCanonPageProps) {
   return (
     <AppShell
       title="My Canon"
-      subtitle="One verified human, one evolving canon."
+      subtitle="One human, one evolving canon."
       endAdornment={
-        canon ? (
+        isCanonComplete ? (
           <Button size="sm" variant="secondary" onClick={shareCanon}>
             Share
           </Button>
@@ -97,52 +86,55 @@ export function MyCanonPage({ session, canon, agent }: MyCanonPageProps) {
     >
       <div className="space-y-4">
         {!session ? (
-          <div className="rounded-3xl border border-gray-200 bg-white p-4">
-            <Typography variant="subtitle" level={2}>
+          <div className="rounded-3xl border border-gray-200 bg-white p-5">
+            <Typography variant="subtitle" level={2} className="mb-1">
               Sign in first
             </Typography>
             <Typography variant="body" level={3} className="text-gray-500">
-              Open Canon in World App and authenticate with Wallet Auth to create your canon.
+              Open Canon in World App and sign in to create your canon.
             </Typography>
           </div>
         ) : (
           <>
             <WorldIdSessionCard isBound={isFullyBound} />
-            {isFullyBound ? (
+
+            {isFullyBound && (
               <>
                 <CanonProgressStepper nextCategory={nextMissingCategory} />
-                {canonCategories.map((category) => (
-                  <CanonSlotCard
-                    key={category}
-                    category={category}
-                    slot={canon?.canon[category] ?? null}
-                    onEdit={() => setEditingCategory(category)}
-                  />
-                ))}
-                {nextMissingCategory ? (
+
+                <div className="space-y-3">
+                  {canonCategories.map((category) => (
+                    <CanonSlotCard
+                      key={category}
+                      category={category}
+                      slot={canon?.canon[category] ?? null}
+                      onEdit={() => setEditingCategory(category)}
+                    />
+                  ))}
+                </div>
+
+                {nextMissingCategory && (
                   <Button fullWidth onClick={() => setEditingCategory(nextMissingCategory)}>
-                    Start with {nextMissingCategory}
+                    {canon?.canon.person ? `Add ${nextMissingCategory}` : 'Start with person'}
                   </Button>
-                ) : null}
-                {isCanonComplete ? <AgentStatusCard agent={agent} /> : null}
+                )}
+
+                {isCanonComplete && <AgentStatusCard agent={agent} />}
               </>
-            ) : null}
+            )}
           </>
         )}
       </div>
-      {editingCategory ? (
+
+      {editingCategory && (
         <CanonEditorForm
           category={editingCategory}
           initialValue={canon?.canon[editingCategory] ?? null}
           open
-          onOpenChange={(open) => {
-            if (!open) {
-              setEditingCategory(null);
-            }
-          }}
+          onOpenChange={(open) => { if (!open) setEditingCategory(null); }}
           onSave={(value) => saveCategory(editingCategory, value)}
         />
-      ) : null}
+      )}
     </AppShell>
   );
 }

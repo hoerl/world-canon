@@ -1,6 +1,6 @@
 'use client';
 
-import { BottomBar, SafeAreaView, TopBar, Typography } from '@worldcoin/mini-apps-ui-kit-react';
+import { SafeAreaView, Typography } from '@worldcoin/mini-apps-ui-kit-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ReactNode } from 'react';
@@ -16,31 +16,40 @@ export function AppShell({ title, subtitle, children, endAdornment }: AppShellPr
   const pathname = usePathname();
 
   return (
-    <SafeAreaView edges={['top', 'bottom']} className="min-h-screen bg-background">
-      <div className="mx-auto flex min-h-screen max-w-xl flex-col px-4 py-4">
-        <TopBar title={title} endAdornment={endAdornment} />
-        {subtitle ? (
-          <Typography as="p" variant="body" level={3} className="mb-4 text-gray-500">
-            {subtitle}
-          </Typography>
-        ) : null}
-        <main className="flex-1 pb-6">{children}</main>
-        <div className="mt-4 rounded-3xl border border-gray-200 bg-white p-2">
-          <BottomBar>
-            <NavLink active={pathname === '/'} href="/">
+    <SafeAreaView edges={['top', 'bottom']} className="fixed inset-0 bg-background">
+      <div className="mx-auto flex h-full max-w-xl flex-col">
+        <header className="flex-none px-6 pt-2 pb-1">
+          <div className="flex items-center justify-between">
+            <Typography as="h1" variant="heading" level={1}>
+              {title}
+            </Typography>
+            {endAdornment}
+          </div>
+          {subtitle ? (
+            <Typography as="p" variant="body" level={3} className="mt-1 text-gray-500">
+              {subtitle}
+            </Typography>
+          ) : null}
+        </header>
+
+        <main className="flex-1 overflow-y-auto px-6 pt-4 pb-8">{children}</main>
+
+        <nav className="flex-none border-t border-gray-100 px-6">
+          <div className="flex">
+            <NavTab active={pathname === '/'} href="/">
               Earth
-            </NavLink>
-            <NavLink active={pathname === '/me'} href="/me">
+            </NavTab>
+            <NavTab active={pathname === '/me'} href="/me">
               My Canon
-            </NavLink>
-          </BottomBar>
-        </div>
+            </NavTab>
+          </div>
+        </nav>
       </div>
     </SafeAreaView>
   );
 }
 
-function NavLink({
+function NavTab({
   active,
   href,
   children,
@@ -52,8 +61,8 @@ function NavLink({
   return (
     <Link
       href={href}
-      className={`flex-1 rounded-2xl px-4 py-3 text-center text-sm font-medium ${
-        active ? 'bg-gray-900 text-white' : 'text-gray-600'
+      className={`flex-1 py-3.5 text-center text-sm font-medium ${
+        active ? 'text-gray-900' : 'text-gray-400'
       }`}
     >
       {children}

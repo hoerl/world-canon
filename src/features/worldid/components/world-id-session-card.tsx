@@ -17,6 +17,38 @@ type RpContext = {
   signature: string;
 };
 
+function DevBindButton() {
+  const router = useRouter();
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+
+  return (
+    <Button
+      fullWidth
+      variant="tertiary"
+      disabled={loading}
+      onClick={async () => {
+        setLoading(true);
+        try {
+          const response = await fetch('/api/dev/bind', { method: 'POST' });
+          if (!response.ok) {
+            const json = (await response.json().catch(() => null)) as { error?: string } | null;
+            throw new Error(json?.error ?? 'Dev bind failed');
+          }
+          toast.success({ title: 'Dev bind complete — World ID skipped.' });
+          router.refresh();
+        } catch (error) {
+          toast.error({ title: error instanceof Error ? error.message : 'Dev bind failed' });
+        } finally {
+          setLoading(false);
+        }
+      }}
+    >
+      {loading ? 'Binding…' : 'Dev Bind (skip World ID)'}
+    </Button>
+  );
+}
+
 export function WorldIdSessionCard({ isBound }: WorldIdSessionCardProps) {
   const router = useRouter();
   const { toast } = useToast();
@@ -69,6 +101,7 @@ export function WorldIdSessionCard({ isBound }: WorldIdSessionCardProps) {
         <Button fullWidth onClick={startBinding}>
           Bind with World ID 4.0
         </Button>
+        {process.env.NEXT_PUBLIC_WORLD_ENV !== 'production' && <DevBindButton />}
       </div>
       {rpContext ? (
         <IDKitSessionWidget

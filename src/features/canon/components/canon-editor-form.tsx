@@ -2,7 +2,6 @@
 
 import { CanonCategory, CanonSelection } from '@/features/canon/domain';
 import {
-  BottomBar,
   Button,
   Drawer,
   DrawerContent,
@@ -23,6 +22,10 @@ type CanonEditorFormProps = {
   onSave: (value: CanonSelection) => Promise<void>;
 };
 
+function capitalize(value: string) {
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
 export function CanonEditorForm({
   category,
   initialValue,
@@ -34,6 +37,7 @@ export function CanonEditorForm({
   const [title, setTitle] = useState(initialValue?.title ?? '');
   const [rationale, setRationale] = useState(initialValue?.rationale ?? '');
   const [isSaving, setIsSaving] = useState(false);
+  const isEditing = initialValue !== null;
 
   useEffect(() => {
     if (open) {
@@ -44,21 +48,19 @@ export function CanonEditorForm({
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="mx-auto max-w-xl rounded-t-[32px] bg-white px-4 pb-4">
+      <DrawerContent className="mx-auto max-w-xl rounded-t-3xl bg-white px-6 pb-6">
         <DrawerHeader>
-          <DrawerTitle>Evolve your {category}</DrawerTitle>
+          <DrawerTitle>
+            {isEditing ? 'Evolve' : 'Add'} your {category}
+          </DrawerTitle>
         </DrawerHeader>
         <Form.Root
-          className="space-y-4"
           onSubmit={async (event) => {
             event.preventDefault();
             setIsSaving(true);
             try {
-              await onSave({
-                title,
-                rationale,
-              });
-              toast.success({ title: `${category} saved.` });
+              await onSave({ title, rationale });
+              toast.success({ title: `${capitalize(category)} saved.` });
               onOpenChange(false);
             } catch (error) {
               toast.error({
@@ -69,33 +71,33 @@ export function CanonEditorForm({
             }
           }}
         >
-          <Input
-            label="Title"
-            variant="floating-label"
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-          />
-          <TextArea
-            label="One-sentence rationale"
-            variant="floating-label"
-            rows={4}
-            value={rationale}
-            onChange={(event) => setRationale(event.target.value)}
-          />
-          <div className="pt-2">
-            <BottomBar>
-              <Button
-                type="button"
-                fullWidth
-                variant="secondary"
-                onClick={() => onOpenChange(false)}
-              >
-                Cancel
-              </Button>
-              <Button type="submit" fullWidth disabled={isSaving}>
-                {isSaving ? 'Saving…' : 'Evolve taste'}
-              </Button>
-            </BottomBar>
+          <div className="space-y-4">
+            <Input
+              label="Title"
+              variant="floating-label"
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+            />
+            <TextArea
+              label="One-sentence rationale"
+              variant="floating-label"
+              rows={3}
+              value={rationale}
+              onChange={(event) => setRationale(event.target.value)}
+            />
+          </div>
+          <div className="mt-6 flex gap-3">
+            <Button
+              type="button"
+              fullWidth
+              variant="secondary"
+              onClick={() => onOpenChange(false)}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" fullWidth disabled={isSaving}>
+              {isSaving ? 'Saving…' : isEditing ? 'Evolve' : 'Save'}
+            </Button>
           </div>
         </Form.Root>
       </DrawerContent>
