@@ -1,10 +1,13 @@
 # Canon
+Canon is a taste identity primitive to Verify your Uniqueness. 
 
-Canon is a World Mini App that gives each verified human one portable canon:
+Every verified human has one Canon comprised of their favorite people, places, or things. 
 
-- one `Person`
-- one `Place`
-- one `Thing`
+This is your permanent taste profile that helps your improve your experience on the agentic web. 
+
+Other mini apps can read it. Your Canon-Agent speaks for it. World Chat shares it. 
+
+Canon is a World Mini App that gives each verified human one portable canon made up of a `Person`, a `Place` or a `Thing`.
 
 Each canon slot stores a title and a short rationale. The app supports:
 
