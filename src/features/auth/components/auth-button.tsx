@@ -1,7 +1,7 @@
 'use client';
 
 import { CANON_SIGN_IN_STATEMENT } from '@/features/auth/constants';
-import { Button, Typography, useToast } from '@worldcoin/mini-apps-ui-kit-react';
+import { Button, useToast } from '@worldcoin/mini-apps-ui-kit-react';
 import { MiniKit } from '@worldcoin/minikit-js';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -14,6 +14,14 @@ type AuthButtonProps = {
 export function AuthButton({ isAuthenticated, username }: AuthButtonProps) {
   const router = useRouter();
   const { toast } = useToast();
+
+  if (isAuthenticated) {
+    return (
+      <Button asChild fullWidth>
+        <Link href="/me">Open my canon</Link>
+      </Button>
+    );
+  }
 
   const handleSignIn = async () => {
     if (!MiniKit.isInWorldApp()) {
@@ -31,11 +39,9 @@ export function AuthButton({ isAuthenticated, username }: AuthButtonProps) {
         expirationTime: new Date(Date.now() + 1000 * 60 * 60),
       });
 
-      await fetch('/api/auth/complete-siwe', {
+      const response = await fetch('/api/auth/complete-siwe', {
         method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-        },
+        headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
           payload: result.data,
           profile: {
@@ -43,38 +49,25 @@ export function AuthButton({ isAuthenticated, username }: AuthButtonProps) {
             profilePictureUrl: MiniKit.user?.profilePictureUrl ?? null,
           },
         }),
-      }).then(async (response) => {
-        if (!response.ok) {
-          const json = (await response.json().catch(() => null)) as { error?: string } | null;
-          throw new Error(json?.error ?? 'Wallet authentication failed');
-        }
       });
 
-      toast.success({ title: 'Signed in to Canon.' });
+      if (!response.ok) {
+        const json = (await response.json().catch(() => null)) as { error?: string } | null;
+        throw new Error(json?.error ?? 'Sign in failed');
+      }
+
+      toast.success({ title: 'Signed in.' });
       router.refresh();
     } catch (error) {
       toast.error({
-        title: error instanceof Error ? error.message : 'Wallet authentication failed',
+        title: error instanceof Error ? error.message : 'Sign in failed',
       });
     }
   };
 
-  if (isAuthenticated) {
-    return (
-      <div className="space-y-3">
-        <Typography as="p" variant="body" level={3} className="text-gray-500">
-          Signed in{username ? ` as ${username}` : ''}.
-        </Typography>
-        <Button asChild fullWidth>
-          <Link href="/me">Open my canon</Link>
-        </Button>
-      </div>
-    );
-  }
-
   return (
     <Button fullWidth onClick={handleSignIn}>
-      Sign in with Wallet Auth
+      Get Started
     </Button>
   );
 }
