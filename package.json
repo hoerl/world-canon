@@ -1,0 +1,50 @@
+{
+  "name": "canon",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "homepage": "https://docs.world.org/mini-apps",
+  "description": "Canon mini app for verified human taste identity",
+  "license": "MIT",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
+    "@worldcoin/agentkit": "^0.1.8",
+    "@worldcoin/idkit": "^4.1.2",
+    "@worldcoin/mini-apps-ui-kit-react": "^1.6.0",
+    "@worldcoin/minikit-js": "^2.0.3",
+    "@worldcoin/minikit-react": "^2.0.3",
+    "clsx": "^2.1.1",
+    "drizzle-orm": "^0.45.2",
+    "jose": "^6.1.0",
+    "next": "^15.2.8",
+    "react": "^19.0.3",
+    "react-dom": "^19.0.3",
+    "tailwind-merge": "^3.2.0",
+    "viem": "2.45.3",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "drizzle-kit": "^0.31.10",
+    "eruda": "^3.4.1",
+    "eslint": "^9",
+    "eslint-config-next": "15.2.3",
+    "eslint-plugin-react": "^7.37.5",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "vitest": "^3.2.4"
+  }
+}
