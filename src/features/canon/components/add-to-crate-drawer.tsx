@@ -2,9 +2,11 @@
 
 import { useAddToCrate } from '@/features/canon/add-to-crate-context';
 import { CanonCategory } from '@/features/canon/domain';
+import { getTagsForCategory, MAX_TAGS_PER_SLOT } from '@/features/canon/tag-registry';
 import { DrawerNav } from '@/features/ui/drawer-nav';
 import {
   Button,
+  Chip,
   Drawer,
   DrawerContent,
   Input,
@@ -16,7 +18,7 @@ import { Airplane, Xmark } from '@worldcoin/mini-apps-ui-kit-react/icons';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
-type Step = 1 | 2 | 3;
+type Step = 1 | 2 | 3 | 4;
 
 const categoryLabels: Record<CanonCategory, string> = {
   person: 'Person',
@@ -54,6 +56,7 @@ export function AddToCrateDrawer() {
   const [step, setStep] = useState<Step>(1);
   const [category, setCategory] = useState<CanonCategory | null>(null);
   const [title, setTitle] = useState('');
+  const [tags, setTags] = useState<string[]>([]);
   const [rationale, setRationale] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
@@ -65,18 +68,20 @@ export function AddToCrateDrawer() {
       setStep(1);
       setCategory(null);
       setTitle('');
+      setTags([]);
       setRationale('');
     }
   }, [isOpen]);
 
   useEffect(() => {
     if (step === 2) setTimeout(() => titleRef.current?.focus(), 100);
-    if (step === 3) setTimeout(() => rationaleRef.current?.focus(), 100);
+    if (step === 4) setTimeout(() => rationaleRef.current?.focus(), 100);
   }, [step]);
 
   const goBack = () => {
+    if (step === 4) { setStep(3); return; }
     if (step === 3) { setStep(2); return; }
-    if (step === 2) { setStep(1); setCategory(null); setTitle(''); return; }
+    if (step === 2) { setStep(1); setCategory(null); setTitle(''); setTags([]); return; }
     close();
   };
 
@@ -92,6 +97,18 @@ export function AddToCrateDrawer() {
     setStep(3);
   };
 
+  const toggleTag = (tag: string) => {
+    haptics.selection();
+    setTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
+    );
+  };
+
+  const submitTags = () => {
+    haptics.impact('light');
+    setStep(4);
+  };
+
   const submitRationale = async () => {
     if (!category || !title.trim() || !rationale.trim()) return;
 
@@ -100,7 +117,7 @@ export function AddToCrateDrawer() {
       const response = await fetch(`/api/canon/${category}`, {
         method: 'PUT',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ title: title.trim(), rationale: rationale.trim() }),
+        body: JSON.stringify({ title: title.trim(), rationale: rationale.trim(), tags }),
       });
 
       if (!response.ok) {
@@ -119,6 +136,8 @@ export function AddToCrateDrawer() {
       setIsSaving(false);
     }
   };
+
+  const atTagLimit = tags.length >= MAX_TAGS_PER_SLOT;
 
   return (
     <Drawer open={isOpen} onOpenChange={(open) => { if (!open) close(); }}>
@@ -187,6 +206,52 @@ export function AddToCrateDrawer() {
             <Typography variant="body" level={2} className="mb-4 text-gray-500">
               {title}
             </Typography>
+            <Typography variant="heading" level={2} className="mb-2">
+              Add tags
+            </Typography>
+            <Typography variant="body" level={3} className="mb-4 text-gray-400">
+              Pick up to {MAX_TAGS_PER_SLOT} (optional)
+            </Typography>
+            <div className="mb-6 flex flex-wrap gap-2">
+              {getTagsForCategory(category).map((tag) => {
+                const selected = tags.includes(tag);
+                const disabled = atTagLimit && !selected;
+                return (
+                  <div
+                    key={tag}
+                    onClick={disabled ? undefined : () => toggleTag(tag)}
+                    className={disabled ? 'cursor-default opacity-40' : 'cursor-pointer'}
+                  >
+                    <Chip
+                      label={tag}
+                      variant={selected ? 'success' : 'default'}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+            <Button fullWidth onClick={submitTags}>
+              {tags.length > 0 ? `Continue with ${tags.length} tag${tags.length > 1 ? 's' : ''}` : 'Skip tags'}
+            </Button>
+          </div>
+        )}
+
+        {step === 4 && category && (
+          <div className="pt-4">
+            <DrawerNav title="What Inspires You" onBack={goBack} onClose={close} />
+            <Typography variant="body" level={3} className="text-gray-400">
+              {categoryQuestions[category]}
+            </Typography>
+            <Typography variant="body" level={2} className="mb-1 text-gray-500">
+              {title}
+            </Typography>
+            {tags.length > 0 && (
+              <div className="mb-4 flex flex-wrap gap-1">
+                {tags.map((tag) => (
+                  <Chip key={tag} label={tag} variant="success" />
+                ))}
+              </div>
+            )}
             <Typography variant="heading" level={2} className="mb-4">
               Why do they matter to you?
             </Typography>

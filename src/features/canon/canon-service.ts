@@ -167,6 +167,7 @@ export class CanonService {
       canon[item.category] = {
         title: item.title,
         rationale: item.rationale,
+        tags: item.tags ?? [],
       };
     }
 
@@ -232,6 +233,7 @@ export class CanonService {
           title: input.title,
           titleNormalized: normalizeCanonTitle(input.title),
           rationale: input.rationale,
+          tags: input.tags,
           updatedAt: now,
         })
         .where(eq(canonItems.id, existing.id));
@@ -242,6 +244,7 @@ export class CanonService {
         title: input.title,
         titleNormalized: normalizeCanonTitle(input.title),
         rationale: input.rationale,
+        tags: input.tags,
         updatedAt: now,
       });
     }

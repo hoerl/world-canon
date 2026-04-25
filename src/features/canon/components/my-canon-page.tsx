@@ -6,6 +6,7 @@ import { FadingTextList } from '@/features/ui/fading-text-list';
 import { buildWorldChatShareMessage } from '@/features/share/world-chat';
 import {
   Button,
+  Chip,
   Drawer,
   DrawerContent,
   ListItem,
@@ -135,6 +136,18 @@ export function MyCanonPage({ session, canon, evolutions, agent }: MyCanonPagePr
             <div className="mb-5 h-52 w-52 rounded-2xl bg-gray-900" />
 
             <FadingTextList items={crateItems} align="center" />
+
+            {(() => {
+              const allTags = sortedCategories.flatMap((cat) => canon?.canon[cat]?.tags ?? []);
+              if (allTags.length === 0) return null;
+              return (
+                <div className="mt-3 flex flex-wrap justify-center gap-1">
+                  {allTags.map((tag) => (
+                    <Chip key={tag} label={tag} variant="default" />
+                  ))}
+                </div>
+              );
+            })()}
 
             <div className="mt-10 space-y-4 text-center">
               {evolutions.length > 0 && (
