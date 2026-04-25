@@ -1,6 +1,6 @@
 'use client';
 
-import { EarthRankings } from '@/features/earth/components/earth-rankings';
+import { EarthFeed } from '@/features/earth/components/earth-feed';
 import { EarthSphere } from '@/features/earth/components/earth-sphere';
 import { EarthCanon } from '@/features/earth/earth-service';
 import { AppBottomBar } from '@/features/ui/app-bottom-bar';
@@ -40,7 +40,7 @@ export function HomePage({
   return (
     <SafeAreaView edges={['top', 'bottom']} className="animate-fadeIn fixed inset-0 bg-background">
       <div className="mx-auto flex h-full max-w-xl flex-col">
-        <main className="flex-1 overflow-y-auto px-6">
+        <main className="flex-1 overflow-y-auto px-6" style={{ overscrollBehaviorY: 'auto' }}>
           <div className="flex flex-col items-center pt-8">
             <Typography as="h1" variant="heading" level={1} className="text-center">
               Earth
@@ -50,8 +50,9 @@ export function HomePage({
             </Typography>
 
             <EarthSphere />
-            <EarthRankings earth={earth} />
           </div>
+
+          <EarthFeed earth={earth} />
         </main>
 
         <AppBottomBar />

@@ -6,10 +6,12 @@ import { demoEarthSeed } from '@/features/earth/seed';
 
 export type EarthEntry = {
   title: string;
+  category: CanonCategory;
   votes: number;
+  updatedAt: string;
 };
 
-export type EarthCanon = Record<CanonCategory, EarthEntry[]>;
+export type EarthCanon = EarthEntry[];
 
 export class EarthService {
   async listEarthCanon(): Promise<EarthCanon> {
@@ -30,11 +32,7 @@ export class EarthService {
       return this.getFallbackEarthCanon();
     }
 
-    const result: EarthCanon = {
-      person: [],
-      place: [],
-      thing: [],
-    };
+    const entries: EarthEntry[] = [];
 
     for (const category of canonCategories) {
       const grouped = new Map<
@@ -60,27 +58,24 @@ export class EarthService {
         }
       }
 
-      result[category] = Array.from(grouped.values())
-        .sort((left, right) => {
-          if (right.votes !== left.votes) {
-            return right.votes - left.votes;
-          }
-          return right.updatedAt.getTime() - left.updatedAt.getTime();
-        })
-        .slice(0, 10)
-        .map(({ title, votes }) => ({ title, votes }));
+      for (const entry of grouped.values()) {
+        entries.push({
+          title: entry.title,
+          category,
+          votes: entry.votes,
+          updatedAt: entry.updatedAt.toISOString(),
+        });
+      }
     }
 
-    return result;
+    entries.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+
+    return entries;
   }
 
   private getFallbackEarthCanon(): EarthCanon {
     if (!isDemoSeedEnabled()) {
-      return {
-        person: [],
-        place: [],
-        thing: [],
-      };
+      return [];
     }
 
     return demoEarthSeed;

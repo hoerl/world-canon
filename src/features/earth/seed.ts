@@ -1,19 +1,58 @@
-import { CanonCategory } from '@/features/canon/domain';
+import { EarthEntry } from '@/features/earth/earth-service';
 
-export const demoEarthSeed: Record<CanonCategory, Array<{ title: string; votes: number }>> = {
-  person: [
-    { title: 'Agnes Martin', votes: 6 },
-    { title: 'James Baldwin', votes: 5 },
-    { title: 'Octavia Butler', votes: 4 },
-  ],
-  place: [
-    { title: 'Parc des Buttes-Chaumont at dawn', votes: 6 },
-    { title: 'Bangkok after rain', votes: 5 },
-    { title: 'A kitchen at midnight', votes: 4 },
-  ],
-  thing: [
-    { title: 'Andrei Rublev', votes: 6 },
-    { title: 'A notebook with torn edges', votes: 5 },
-    { title: 'A favorite bowl', votes: 4 },
-  ],
-};
+function ts(minutesAgo: number): string {
+  return new Date(Date.now() - minutesAgo * 60_000).toISOString();
+}
+
+export const demoEarthSeed: EarthEntry[] = [
+  { title: 'Jiro Ono', category: 'person', votes: 12, updatedAt: ts(2) },
+  { title: 'Marfa, Texas at dusk', category: 'place', votes: 9, updatedAt: ts(4) },
+  { title: 'In the Mood for Love', category: 'thing', votes: 14, updatedAt: ts(7) },
+  { title: 'Dieter Rams', category: 'person', votes: 11, updatedAt: ts(12) },
+  { title: "Tadao Ando's Church of the Light", category: 'place', votes: 8, updatedAt: ts(15) },
+  { title: 'A borrowed copy of Dept. of Speculation', category: 'thing', votes: 7, updatedAt: ts(20) },
+  { title: 'Agnes Martin', category: 'person', votes: 10, updatedAt: ts(25) },
+  { title: 'The old town in Fez before noon', category: 'place', votes: 6, updatedAt: ts(30) },
+  { title: 'Kind of Blue', category: 'thing', votes: 13, updatedAt: ts(35) },
+  { title: 'Irma Boom', category: 'person', votes: 8, updatedAt: ts(40) },
+  { title: 'Naoshima Island', category: 'place', votes: 10, updatedAt: ts(48) },
+  { title: 'Andrei Rublev', category: 'thing', votes: 9, updatedAt: ts(55) },
+  { title: 'James Baldwin', category: 'person', votes: 11, updatedAt: ts(62) },
+  { title: 'A window seat at Bar Pisellino', category: 'place', votes: 5, updatedAt: ts(70) },
+  { title: 'Boards of Canada — Music Has the Right to Children', category: 'thing', votes: 7, updatedAt: ts(80) },
+  { title: 'Samin Nosrat', category: 'person', votes: 6, updatedAt: ts(90) },
+  { title: 'Lisbon tram 28 at golden hour', category: 'place', votes: 8, updatedAt: ts(100) },
+  { title: "Jodorowsky's Dune (the documentary)", category: 'thing', votes: 5, updatedAt: ts(115) },
+  { title: 'Hayao Miyazaki', category: 'person', votes: 15, updatedAt: ts(125) },
+  { title: "The reading room at Powell's", category: 'place', votes: 4, updatedAt: ts(140) },
+  { title: 'A well-seasoned cast iron pan', category: 'thing', votes: 9, updatedAt: ts(150) },
+  { title: 'Octavia Butler', category: 'person', votes: 7, updatedAt: ts(165) },
+  { title: 'Kyoto moss gardens in November', category: 'place', votes: 11, updatedAt: ts(180) },
+  { title: 'The Shipping News by Annie Proulx', category: 'thing', votes: 4, updatedAt: ts(200) },
+  { title: 'Charlotte Perriand', category: 'person', votes: 5, updatedAt: ts(220) },
+  { title: 'Parc des Buttes-Chaumont at dawn', category: 'place', votes: 7, updatedAt: ts(240) },
+  { title: 'Blade Runner (final cut)', category: 'thing', votes: 10, updatedAt: ts(260) },
+  { title: 'Bruno Munari', category: 'person', votes: 6, updatedAt: ts(280) },
+  { title: 'Bangkok after rain', category: 'place', votes: 8, updatedAt: ts(300) },
+  { title: 'A notebook with torn edges', category: 'thing', votes: 6, updatedAt: ts(320) },
+  { title: 'Ryuichi Sakamoto', category: 'person', votes: 9, updatedAt: ts(340) },
+  { title: 'The steps of Sacré-Cœur at midnight', category: 'place', votes: 5, updatedAt: ts(365) },
+  { title: 'Persons Unknown by Susie Steiner', category: 'thing', votes: 3, updatedAt: ts(390) },
+  { title: 'Mike Matas', category: 'person', votes: 4, updatedAt: ts(420) },
+  { title: 'A kitchen at midnight', category: 'place', votes: 6, updatedAt: ts(450) },
+  { title: 'Slowdive — Souvlaki', category: 'thing', votes: 7, updatedAt: ts(480) },
+  { title: 'Ursula K. Le Guin', category: 'person', votes: 8, updatedAt: ts(510) },
+  { title: "Oaxaca's central market on a Saturday", category: 'place', votes: 5, updatedAt: ts(540) },
+  { title: 'A favorite bowl', category: 'thing', votes: 8, updatedAt: ts(570) },
+  { title: 'Kenya Hara', category: 'person', votes: 5, updatedAt: ts(600) },
+  { title: 'The Judd Foundation in Soho', category: 'place', votes: 4, updatedAt: ts(640) },
+  { title: 'Stalker by Tarkovsky', category: 'thing', votes: 6, updatedAt: ts(680) },
+  { title: 'Alice Waters', category: 'person', votes: 7, updatedAt: ts(720) },
+  { title: 'A rooftop in Amman at sunset', category: 'place', votes: 3, updatedAt: ts(760) },
+  { title: 'The Master and Margarita', category: 'thing', votes: 5, updatedAt: ts(800) },
+  { title: 'Virgil Abloh', category: 'person', votes: 10, updatedAt: ts(850) },
+  { title: 'Fogo Island Inn', category: 'place', votes: 4, updatedAt: ts(900) },
+  { title: 'Nils Frahm — All Melody', category: 'thing', votes: 6, updatedAt: ts(950) },
+  { title: 'Yayoi Kusama', category: 'person', votes: 9, updatedAt: ts(1000) },
+  { title: 'The courtyard of Casa Barragán', category: 'place', votes: 7, updatedAt: ts(1050) },
+];
