@@ -72,8 +72,12 @@ export function ShopperPage({ defaultSlug }: { defaultSlug: string | null }) {
     setErrorMessage(null);
 
     try {
+      const params = new URLSearchParams({ slug: slug.trim() });
+      for (const g of gifts) {
+        params.append('exclude', g.name);
+      }
       const res = await fetch(
-        `/api/demo/shopper?slug=${encodeURIComponent(slug.trim())}`,
+        `/api/demo/shopper?${params.toString()}`,
         { signal: controller.signal },
       );
 
