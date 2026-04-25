@@ -6,12 +6,14 @@ import { DrawerNav } from '@/features/ui/drawer-nav';
 import { FadingTextList } from '@/features/ui/fading-text-list';
 import { buildWorldChatShareMessage } from '@/features/share/world-chat';
 import {
+  Button,
   Drawer,
   DrawerContent,
   SafeAreaView,
   Typography,
   useToast,
 } from '@worldcoin/mini-apps-ui-kit-react';
+import { ShareIos, Xmark } from '@worldcoin/mini-apps-ui-kit-react/icons';
 import { MiniKit } from '@worldcoin/minikit-js';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -109,28 +111,19 @@ export function MyCanonPage({ session, canon, evolutions, agent }: MyCanonPagePr
       <div className="mx-auto flex h-full max-w-xl flex-col">
         <header className="flex-none px-6 pt-4 pb-2">
           <div className="flex items-center">
-            <Link href="/" className="flex h-10 w-10 items-center justify-center text-gray-900" aria-label="Close">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <path d="M1 1l12 12M13 1L1 13" />
-              </svg>
+            <Link href="/" aria-label="Close">
+              <Button size="icon" variant="tertiary" asChild>
+                <span><Xmark className="h-5 w-5" /></span>
+              </Button>
             </Link>
             <div className="flex-1 text-center">
               <Typography variant="heading" level={1}>
                 My Crate
               </Typography>
             </div>
-            <button
-              type="button"
-              onClick={shareCanon}
-              className="flex h-10 w-10 items-center justify-center text-gray-500"
-              aria-label="Share"
-            >
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M17 7l-7-6-7 6" />
-                <path d="M10 1v12" />
-                <path d="M4 11v6a1 1 0 001 1h10a1 1 0 001-1v-6" />
-              </svg>
-            </button>
+            <Button size="icon" variant="tertiary" onClick={shareCanon} aria-label="Share">
+              <ShareIos className="h-5 w-5" />
+            </Button>
           </div>
           {canon && (
             <Typography variant="body" level={3} className="mt-1 text-center text-gray-400">

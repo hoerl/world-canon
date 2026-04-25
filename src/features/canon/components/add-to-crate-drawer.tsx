@@ -11,6 +11,7 @@ import {
   Typography,
   useToast,
 } from '@worldcoin/mini-apps-ui-kit-react';
+import { Xmark } from '@worldcoin/mini-apps-ui-kit-react/icons';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
@@ -101,16 +102,15 @@ export function AddToCrateDrawer() {
               <Typography variant="subtitle" level={2} className="font-semibold">
                 What Inspires You?
               </Typography>
-              <button
-                type="button"
+              <Button
+                size="icon"
+                variant="tertiary"
                 onClick={close}
-                className="absolute right-6 flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 text-gray-400"
+                className="absolute right-6"
                 aria-label="Close"
               >
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <path d="M1 1l8 8M9 1L1 9" />
-                </svg>
-              </button>
+                <Xmark className="h-4 w-4" />
+              </Button>
             </div>
             <Typography variant="body" level={3} className="mb-6 text-center text-gray-400">
               Add to your Crate

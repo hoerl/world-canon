@@ -186,7 +186,7 @@ export class CanonService {
   async listEvolutionsBySlug(slug: string): Promise<CanonEvolutionRecord[]> {
     const user = await this.getUserBySlug(slug);
     if (!user) {
-      throw new HttpError(404, 'Canon not found');
+      throw new HttpError(404, 'Crate not found');
     }
 
     const db = getDb();
@@ -275,12 +275,12 @@ export class CanonService {
   async requireCompleteCanonForWorldSessionId(worldSessionId: string) {
     const canon = await this.getCanonByWorldSessionId(worldSessionId);
     if (!canon) {
-      throw new HttpError(404, 'Canon not found');
+      throw new HttpError(404, 'Crate not found');
     }
 
     const missingCategory = Object.entries(canon.canon).find(([, value]) => value === null)?.[0];
     if (missingCategory) {
-      throw new HttpError(409, 'Complete your Person, Place, and Thing before enabling a Canon-Agent');
+      throw new HttpError(409, 'Complete your Person, Place, and Thing before enabling a Crate-Agent');
     }
 
     return canon;

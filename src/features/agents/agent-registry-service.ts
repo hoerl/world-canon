@@ -77,7 +77,7 @@ export class AgentRegistryService {
 
     const existing = await this.getActiveAgentByUserId(user.id);
     if (!existing) {
-      throw new HttpError(404, 'No active Canon-Agent to rotate');
+      throw new HttpError(404, 'No active Crate-Agent to rotate');
     }
 
     const now = new Date();
@@ -113,17 +113,17 @@ export class AgentRegistryService {
   async getSignedCanonBySlug(slug: string): Promise<AgentAttestedCanonRecord> {
     const canon = await this.canonService.getCanonBySlug(slug);
     if (!canon) {
-      throw new HttpError(404, 'Canon not found');
+      throw new HttpError(404, 'Crate not found');
     }
 
     const [user] = await getDb().select().from(users).where(eq(users.publicSlug, slug)).limit(1);
     if (!user) {
-      throw new HttpError(404, 'Canon owner not found');
+      throw new HttpError(404, 'Crate owner not found');
     }
 
     const agent = await this.getActiveAgentByUserId(user.id);
     if (!agent) {
-      throw new HttpError(404, 'Canon-Agent not found');
+      throw new HttpError(404, 'Crate-Agent not found');
     }
 
     const signedCanon = await this.signer.signCanon(

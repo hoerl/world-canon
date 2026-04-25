@@ -3,7 +3,7 @@
 import { EarthRankings } from '@/features/earth/components/earth-rankings';
 import { EarthSphere } from '@/features/earth/components/earth-sphere';
 import { EarthCanon } from '@/features/earth/earth-service';
-import { BottomNav } from '@/features/ui/bottom-nav';
+import { AppBottomBar } from '@/features/ui/app-bottom-bar';
 import { LandingPage } from '@/features/ui/landing-page';
 import { SafeAreaView, Typography } from '@worldcoin/mini-apps-ui-kit-react';
 
@@ -37,7 +37,7 @@ export function HomePage({
           </div>
         </main>
 
-        <BottomNav />
+        <AppBottomBar />
       </div>
     </SafeAreaView>
   );

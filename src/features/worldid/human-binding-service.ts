@@ -1,5 +1,5 @@
 import { CanonService } from '@/features/canon/canon-service';
-import { slugifyCanonUserName } from '@/features/canon/domain';
+import { slugifyCrateUserName } from '@/features/canon/domain';
 import { getRequiredEnv } from '@/lib/env';
 import { HttpError } from '@/lib/http';
 import { signRequest } from '@worldcoin/idkit';
@@ -79,7 +79,7 @@ export class HumanBindingService {
     }
 
     const publicSlug = await this.reserveSlug(
-      slugifyCanonUserName(walletSession.username ?? walletSession.walletAddress),
+      slugifyCrateUserName(walletSession.username ?? walletSession.walletAddress),
     );
 
     return this.canonService.createBoundUser({

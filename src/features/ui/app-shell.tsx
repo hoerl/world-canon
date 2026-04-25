@@ -1,6 +1,6 @@
 'use client';
 
-import { BottomNav } from '@/features/ui/bottom-nav';
+import { AppBottomBar } from '@/features/ui/app-bottom-bar';
 import { SafeAreaView, Typography } from '@worldcoin/mini-apps-ui-kit-react';
 import { ReactNode } from 'react';
 
@@ -31,7 +31,7 @@ export function AppShell({ title, subtitle, children, endAdornment }: AppShellPr
 
         <main className="flex-1 overflow-y-auto px-6 pt-4 pb-8">{children}</main>
 
-        <BottomNav />
+        <AppBottomBar />
       </div>
     </SafeAreaView>
   );
