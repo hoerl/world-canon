@@ -11,6 +11,9 @@ export default async function MePage() {
   const canon = session?.worldSessionId
     ? await canonService.getCanonByWorldSessionId(session.worldSessionId)
     : null;
+  const evolutions = canon
+    ? await canonService.listEvolutionsBySlug(canon.slug)
+    : [];
   const agent = session?.worldSessionId
     ? await agentService.getAgentStatusByWorldSessionId(session.worldSessionId)
     : null;
@@ -26,6 +29,7 @@ export default async function MePage() {
           : null
       }
       canon={canon}
+      evolutions={evolutions}
       agent={
         agent
           ? {

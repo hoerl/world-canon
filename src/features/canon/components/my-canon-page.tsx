@@ -2,9 +2,10 @@
 
 import { AgentStatusCard } from '@/features/agents/components/agent-status-card';
 import { CanonEditorForm } from '@/features/canon/components/canon-editor-form';
+import { CanonHistoryFeed } from '@/features/canon/components/canon-history-feed';
 import { CanonProgressStepper } from '@/features/canon/components/canon-progress-stepper';
 import { CanonSlotCard } from '@/features/canon/components/canon-slot-card';
-import { CanonCategory, CanonRecord, canonCategories } from '@/features/canon/domain';
+import { CanonCategory, CanonEvolutionRecord, CanonRecord, canonCategories } from '@/features/canon/domain';
 import { buildWorldChatShareMessage } from '@/features/share/world-chat';
 import { AppShell } from '@/features/ui/app-shell';
 import { WorldIdSessionCard } from '@/features/worldid/components/world-id-session-card';
@@ -21,6 +22,7 @@ type MyCanonPageProps = {
       }
     | null;
   canon: CanonRecord | null;
+  evolutions: CanonEvolutionRecord[];
   agent:
     | {
         walletAddress: string;
@@ -30,7 +32,7 @@ type MyCanonPageProps = {
     | null;
 };
 
-export function MyCanonPage({ session, canon, agent }: MyCanonPageProps) {
+export function MyCanonPage({ session, canon, evolutions, agent }: MyCanonPageProps) {
   const router = useRouter();
   const { toast } = useToast();
   const [editingCategory, setEditingCategory] = useState<CanonCategory | null>(null);
@@ -119,6 +121,8 @@ export function MyCanonPage({ session, canon, agent }: MyCanonPageProps) {
                   </Button>
                 )}
 
+                <CanonHistoryFeed evolutions={evolutions} />
+
                 {isCanonComplete && <AgentStatusCard agent={agent} />}
               </>
             )}
@@ -129,7 +133,6 @@ export function MyCanonPage({ session, canon, agent }: MyCanonPageProps) {
       {editingCategory && (
         <CanonEditorForm
           category={editingCategory}
-          initialValue={canon?.canon[editingCategory] ?? null}
           open
           onOpenChange={(open) => { if (!open) setEditingCategory(null); }}
           onSave={(value) => saveCategory(editingCategory, value)}
