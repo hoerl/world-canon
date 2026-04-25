@@ -40,7 +40,7 @@ export function EarthCategoryList({ earth }: { earth: EarthCanon }) {
               No entries yet
             </Typography>
             <Typography variant="body" level={3} className="text-gray-400">
-              Be the first to publish your canon.
+              Be the first to publish your crate.
             </Typography>
           </div>
         )}

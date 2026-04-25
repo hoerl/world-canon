@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Canon',
+  title: 'Crate',
   description: 'A portable taste identity primitive for every verified human.',
 };
 

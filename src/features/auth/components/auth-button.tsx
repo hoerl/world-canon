@@ -18,14 +18,14 @@ export function AuthButton({ isAuthenticated, username }: AuthButtonProps) {
   if (isAuthenticated) {
     return (
       <Button asChild fullWidth>
-        <Link href="/me">Open my canon</Link>
+        <Link href="/me">Open my crate</Link>
       </Button>
     );
   }
 
   const handleSignIn = async () => {
     if (!MiniKit.isInWorldApp()) {
-      toast.error({ title: 'Open Canon inside World App to sign in.' });
+      toast.error({ title: 'Open Crate inside World App to sign in.' });
       return;
     }
 
@@ -66,7 +66,7 @@ export function AuthButton({ isAuthenticated, username }: AuthButtonProps) {
   };
 
   return (
-    <Button fullWidth onClick={handleSignIn}>
+    <Button onClick={handleSignIn}>
       Get Started
     </Button>
   );

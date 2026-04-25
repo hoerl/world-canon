@@ -62,10 +62,10 @@ export function WorldIdSessionCard({ isBound }: WorldIdSessionCardProps) {
           <VerificationBadge verified />
           <div>
             <Typography variant="subtitle" level={2}>
-              Canon is bound to a verified human
+              Crate is bound to a verified human
             </Typography>
             <Typography variant="body" level={3} className="text-gray-500">
-              One World ID session anchors your permanent Canon.
+              One World ID session anchors your permanent Crate.
             </Typography>
           </div>
         </div>
@@ -93,10 +93,10 @@ export function WorldIdSessionCard({ isBound }: WorldIdSessionCardProps) {
     <>
       <div className="space-y-3 rounded-3xl border border-amber-200 bg-amber-50 p-4">
         <Typography variant="subtitle" level={2}>
-          Bind your Canon to one verified human
+          Bind your Crate to one verified human
         </Typography>
         <Typography variant="body" level={3} className="text-gray-600">
-          Complete one World ID 4.0 session proof before you create or evolve your canon.
+          Complete one World ID 4.0 session proof before you create or evolve your crate.
         </Typography>
         <Button fullWidth onClick={startBinding}>
           Bind with World ID 4.0
@@ -128,7 +128,7 @@ export function WorldIdSessionCard({ isBound }: WorldIdSessionCardProps) {
             }
           }}
           onSuccess={async () => {
-            toast.success({ title: 'Canon bound to your World ID.' });
+            toast.success({ title: 'Crate bound to your World ID.' });
             router.refresh();
           }}
           onError={(errorCode) => {
