@@ -25,7 +25,8 @@ export async function GET(request: Request) {
     }
 
     const evolutions = await canonService.listEvolutionsBySlug(slug);
-    const prompt = buildShopperPrompt(canon, evolutions);
+    const exclude = searchParams.getAll('exclude');
+    const prompt = buildShopperPrompt(canon, evolutions, exclude);
 
     const client = new Anthropic({ apiKey: getRequiredEnv('ANTHROPIC_API_KEY') });
 
