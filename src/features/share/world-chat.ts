@@ -12,5 +12,5 @@ export function buildWorldChatShareMessage(canon: CanonRecord, publicUrl: string
     .filter(Boolean)
     .join(' • ');
 
-  return `My Canon\n${summary}\n${publicUrl}`;
+  return `My Crate\n${summary}\n${publicUrl}`;
 }

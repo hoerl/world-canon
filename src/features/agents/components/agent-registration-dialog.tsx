@@ -25,11 +25,11 @@ export function AgentRegistrationDialog({
   onConfirm,
   isLoading,
 }: AgentRegistrationDialogProps) {
-  const title = mode === 'register' ? 'Provision Canon-Agent?' : 'Rotate Canon-Agent?';
+  const title = mode === 'register' ? 'Provision Crate-Agent?' : 'Rotate Crate-Agent?';
   const description =
     mode === 'register'
-      ? 'Canon will create a managed wallet for your Canon-Agent and check its AgentBook registration state.'
-      : 'Rotation revokes the current active Canon-Agent and provisions a new managed wallet.';
+      ? 'Crate will create a managed wallet for your Crate-Agent and check its AgentBook registration state.'
+      : 'Rotation revokes the current active Crate-Agent and provisions a new managed wallet.';
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>

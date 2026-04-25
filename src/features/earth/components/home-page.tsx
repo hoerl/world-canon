@@ -1,11 +1,11 @@
 'use client';
 
-import { AuthButton } from '@/features/auth/components/auth-button';
-import { EarthCategoryList } from '@/features/earth/components/earth-category-list';
+import { EarthRankings } from '@/features/earth/components/earth-rankings';
+import { EarthSphere } from '@/features/earth/components/earth-sphere';
 import { EarthCanon } from '@/features/earth/earth-service';
-import { AppShell } from '@/features/ui/app-shell';
+import { BottomNav } from '@/features/ui/bottom-nav';
 import { LandingPage } from '@/features/ui/landing-page';
-import { Typography } from '@worldcoin/mini-apps-ui-kit-react';
+import { SafeAreaView, Typography } from '@worldcoin/mini-apps-ui-kit-react';
 
 export function HomePage({
   earth,
@@ -17,24 +17,28 @@ export function HomePage({
   } | null;
 }) {
   if (!session) {
-    return <LandingPage earth={earth} />;
+    return <LandingPage />;
   }
 
   return (
-    <AppShell title="Earth" subtitle="What humanity chooses, together.">
-      <div className="space-y-8">
-        <EarthCategoryList earth={earth} />
+    <SafeAreaView edges={['top', 'bottom']} className="fixed inset-0 bg-background">
+      <div className="mx-auto flex h-full max-w-xl flex-col">
+        <main className="flex-1 overflow-y-auto px-6">
+          <div className="flex flex-col items-center pt-8">
+            <Typography as="h1" variant="heading" level={1} className="text-center">
+              Earth
+            </Typography>
+            <Typography variant="body" level={3} className="text-gray-400">
+              Connected
+            </Typography>
 
-        <section className="rounded-3xl border border-gray-200 bg-white p-5">
-          <Typography variant="subtitle" level={2} className="mb-1">
-            Your Canon
-          </Typography>
-          <Typography variant="body" level={3} className="mb-4 text-gray-500">
-            Shape the rankings. Publish your Person, Place, and Thing.
-          </Typography>
-          <AuthButton isAuthenticated username={session.username} />
-        </section>
+            <EarthSphere />
+            <EarthRankings earth={earth} />
+          </div>
+        </main>
+
+        <BottomNav />
       </div>
-    </AppShell>
+    </SafeAreaView>
   );
 }
