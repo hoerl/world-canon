@@ -4,8 +4,12 @@ import { EarthRankings } from '@/features/earth/components/earth-rankings';
 import { EarthSphere } from '@/features/earth/components/earth-sphere';
 import { EarthCanon } from '@/features/earth/earth-service';
 import { AppBottomBar } from '@/features/ui/app-bottom-bar';
+import { BrandIntro } from '@/features/ui/brand-intro';
 import { LandingPage } from '@/features/ui/landing-page';
 import { SafeAreaView, Typography } from '@worldcoin/mini-apps-ui-kit-react';
+import { useCallback, useState } from 'react';
+
+const INTRO_KEY = 'crate.intro.played';
 
 export function HomePage({
   earth,
@@ -16,8 +20,21 @@ export function HomePage({
     username: string | null;
   } | null;
 }) {
+  const [introDone, setIntroDone] = useState(() =>
+    typeof window === 'undefined' ? true : sessionStorage.getItem(INTRO_KEY) === '1'
+  );
+
+  const handleIntroComplete = useCallback(() => {
+    sessionStorage.setItem(INTRO_KEY, '1');
+    setIntroDone(true);
+  }, []);
+
   if (!session) {
     return <LandingPage />;
+  }
+
+  if (!introDone) {
+    return <BrandIntro onComplete={handleIntroComplete} />;
   }
 
   return (
