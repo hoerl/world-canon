@@ -45,6 +45,7 @@ export const canonItems = pgTable(
     title: text('title').notNull(),
     titleNormalized: text('title_normalized').notNull(),
     rationale: text('rationale').notNull(),
+    tags: text('tags').array().notNull().default([]),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
   },

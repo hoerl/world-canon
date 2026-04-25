@@ -1,7 +1,7 @@
 'use client';
 
 import { CanonCategory, CanonSelection } from '@/features/canon/domain';
-import { Button, ListItem, Typography } from '@worldcoin/mini-apps-ui-kit-react';
+import { Button, Chip, ListItem, Typography } from '@worldcoin/mini-apps-ui-kit-react';
 
 export function CanonSlotCard({
   category,
@@ -29,6 +29,13 @@ export function CanonSlotCard({
         label={slot?.title ?? `No ${category} yet`}
         description={slot?.rationale ?? 'This slot is still empty.'}
       />
+      {slot?.tags && slot.tags.length > 0 && (
+        <div className="flex flex-wrap gap-1 px-2 pb-2">
+          {slot.tags.map((tag) => (
+            <Chip key={tag} label={tag} variant="default" />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -6,6 +6,7 @@ export type CanonCategory = (typeof canonCategories)[number];
 export type CanonSelection = {
   title: string;
   rationale: string;
+  tags: string[];
 };
 
 export type CanonMap = Record<CanonCategory, CanonSelection | null>;
@@ -31,6 +32,7 @@ export type CanonEvolutionRecord = {
 export const canonSlotInputSchema = z.object({
   title: z.string().trim().min(1).max(120),
   rationale: z.string().trim().min(1).max(180),
+  tags: z.array(z.string().trim().min(1).max(30)).max(3).optional().default([]),
 });
 
 export type CanonSlotInput = z.infer<typeof canonSlotInputSchema>;
