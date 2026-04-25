@@ -20,7 +20,7 @@ export function CanonSlotCard({
         </Typography>
         {onEdit ? (
           <Button size="sm" variant="secondary" onClick={onEdit}>
-            {slot ? 'Edit' : 'Add'}
+            {slot ? 'Change' : 'Add'}
           </Button>
         ) : null}
       </div>

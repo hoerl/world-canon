@@ -16,7 +16,6 @@ import { useEffect, useState } from 'react';
 
 type CanonEditorFormProps = {
   category: CanonCategory;
-  initialValue: CanonSelection | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSave: (value: CanonSelection) => Promise<void>;
@@ -28,30 +27,28 @@ function capitalize(value: string) {
 
 export function CanonEditorForm({
   category,
-  initialValue,
   open,
   onOpenChange,
   onSave,
 }: CanonEditorFormProps) {
   const { toast } = useToast();
-  const [title, setTitle] = useState(initialValue?.title ?? '');
-  const [rationale, setRationale] = useState(initialValue?.rationale ?? '');
+  const [title, setTitle] = useState('');
+  const [rationale, setRationale] = useState('');
   const [isSaving, setIsSaving] = useState(false);
-  const isEditing = initialValue !== null;
 
   useEffect(() => {
     if (open) {
-      setTitle(initialValue?.title ?? '');
-      setRationale(initialValue?.rationale ?? '');
+      setTitle('');
+      setRationale('');
     }
-  }, [initialValue, open]);
+  }, [open]);
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent className="mx-auto max-w-xl rounded-t-3xl bg-white px-6 pb-6">
         <DrawerHeader>
           <DrawerTitle>
-            {isEditing ? 'Evolve' : 'Add'} your {category}
+            Your {category}
           </DrawerTitle>
         </DrawerHeader>
         <Form.Root
@@ -96,7 +93,7 @@ export function CanonEditorForm({
               Cancel
             </Button>
             <Button type="submit" fullWidth disabled={isSaving}>
-              {isSaving ? 'Saving…' : isEditing ? 'Evolve' : 'Save'}
+              {isSaving ? 'Saving…' : 'Save'}
             </Button>
           </div>
         </Form.Root>
