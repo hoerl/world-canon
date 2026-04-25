@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 const LETTERS = ['C', 'R', 'A', 'T', 'E'] as const;
 const TOTAL_DURATION = 2000;
+const FADE_OUT_DURATION = 400;
 const FAILSAFE_BUFFER = 500;
 
 const letterOffsets = [
@@ -14,8 +15,10 @@ const letterOffsets = [
   { x: -10, y: 50, r: -6 },
 ];
 
+type Phase = 'square' | 'glitch' | 'resolve' | 'fadeOut';
+
 export function BrandIntro({ onComplete }: { onComplete: () => void }) {
-  const [phase, setPhase] = useState<'square' | 'glitch' | 'resolve' | 'done'>('square');
+  const [phase, setPhase] = useState<Phase>('square');
 
   useEffect(() => {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -27,24 +30,27 @@ export function BrandIntro({ onComplete }: { onComplete: () => void }) {
 
     const t1 = setTimeout(() => setPhase('glitch'), 600);
     const t2 = setTimeout(() => setPhase('resolve'), 1000);
-    const t3 = setTimeout(() => {
-      setPhase('done');
-      onComplete();
-    }, TOTAL_DURATION);
-    const failsafe = setTimeout(onComplete, TOTAL_DURATION + FAILSAFE_BUFFER);
+    const t3 = setTimeout(() => setPhase('fadeOut'), TOTAL_DURATION);
+    const t4 = setTimeout(onComplete, TOTAL_DURATION + FADE_OUT_DURATION);
+    const failsafe = setTimeout(onComplete, TOTAL_DURATION + FADE_OUT_DURATION + FAILSAFE_BUFFER);
 
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
       clearTimeout(t3);
+      clearTimeout(t4);
       clearTimeout(failsafe);
     };
   }, [onComplete]);
 
-  if (phase === 'done') return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-white"
+      style={{
+        opacity: phase === 'fadeOut' ? 0 : 1,
+        transition: `opacity ${FADE_OUT_DURATION}ms ease-out`,
+      }}
+    >
       <div className="relative flex flex-col items-center justify-center">
         <div
           className={`absolute h-12 w-12 bg-gray-900 transition-all ${
@@ -68,7 +74,7 @@ export function BrandIntro({ onComplete }: { onComplete: () => void }) {
           {LETTERS.map((letter, i) => {
             const offset = letterOffsets[i];
             const isGlitch = phase === 'glitch';
-            const isResolved = phase === 'resolve';
+            const isResolved = phase === 'resolve' || phase === 'fadeOut';
 
             return (
               <span

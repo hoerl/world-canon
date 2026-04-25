@@ -4,9 +4,19 @@ import { AuthButton } from '@/features/auth/components/auth-button';
 import {
   BulletList,
   BulletListItem,
+  CircularIcon,
   SafeAreaView,
   Typography,
 } from '@worldcoin/mini-apps-ui-kit-react';
+import { Spark } from '@worldcoin/mini-apps-ui-kit-react/icons';
+
+function SparkBullet() {
+  return (
+    <CircularIcon className="size-9 bg-gray-900">
+      <Spark className="text-gray-0" />
+    </CircularIcon>
+  );
+}
 
 export function LandingPage() {
   return (
@@ -22,17 +32,17 @@ export function LandingPage() {
           </Typography>
 
           <BulletList>
-            <BulletListItem bulletPoint={<span className="text-sm text-gray-400">①</span>}>
+            <BulletListItem bulletPoint={<SparkBullet />}>
               <Typography variant="body" level={2} className="text-gray-700">
                 Fill your <strong>Crate</strong> with People, Places, and Things that inspire you
               </Typography>
             </BulletListItem>
-            <BulletListItem bulletPoint={<span className="text-sm text-gray-400">②</span>}>
+            <BulletListItem bulletPoint={<SparkBullet />}>
               <Typography variant="body" level={2} className="text-gray-700">
                 <strong>Deploy your Crate</strong> on the Agentic Web.
               </Typography>
             </BulletListItem>
-            <BulletListItem bulletPoint={<span className="text-sm text-gray-400">③</span>}>
+            <BulletListItem bulletPoint={<SparkBullet />}>
               <Typography variant="body" level={2} className="text-gray-700">
                 <strong>Share your Crate</strong> with Others on World Chat.
               </Typography>

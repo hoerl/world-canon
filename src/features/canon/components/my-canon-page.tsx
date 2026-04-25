@@ -2,13 +2,13 @@
 
 import { useAddToCrate } from '@/features/canon/add-to-crate-context';
 import { CanonEvolutionRecord, CanonRecord, canonCategories } from '@/features/canon/domain';
-import { DrawerNav } from '@/features/ui/drawer-nav';
 import { FadingTextList } from '@/features/ui/fading-text-list';
 import { buildWorldChatShareMessage } from '@/features/share/world-chat';
 import {
   Button,
   Drawer,
   DrawerContent,
+  ListItem,
   SafeAreaView,
   TopBar,
   Typography,
@@ -109,7 +109,7 @@ export function MyCanonPage({ session, canon, evolutions, agent }: MyCanonPagePr
   const crateItems = sortedCategories.map((cat) => canon?.canon[cat]?.title ?? null);
 
   return (
-    <SafeAreaView edges={['top', 'bottom']} className="fixed inset-0 bg-background">
+    <SafeAreaView edges={['top', 'bottom']} className="animate-fadeIn fixed inset-0 bg-background">
       <div className="mx-auto flex h-full max-w-xl flex-col">
         <TopBar
           title="My Crate"
@@ -167,26 +167,24 @@ export function MyCanonPage({ session, canon, evolutions, agent }: MyCanonPagePr
       </div>
 
       <Drawer open={historyOpen} onOpenChange={setHistoryOpen}>
-        <DrawerContent className="mx-auto max-w-xl rounded-t-3xl bg-white px-6 pb-6">
-          <div className="pt-4">
-            <DrawerNav title="History" onClose={() => setHistoryOpen(false)} />
-            <div className="space-y-4">
-              {evolutions.map((evo, i) => (
-                <div key={`${evo.category}-${evo.evolved_at}-${i}`} className="flex items-baseline justify-between">
-                  <div className="flex items-baseline gap-2 min-w-0">
-                    <Typography variant="label" level={2} className="shrink-0 uppercase text-gray-400">
-                      {evo.category}
-                    </Typography>
-                    <Typography variant="body" level={2} className="truncate text-gray-900">
-                      {evo.new_title}
-                    </Typography>
-                  </div>
-                  <Typography variant="label" level={2} className="shrink-0 text-gray-400">
-                    {formatRelativeTime(evo.evolved_at)}
-                  </Typography>
-                </div>
-              ))}
-            </div>
+        <DrawerContent className="mx-auto max-w-xl rounded-t-3xl bg-white pb-6">
+          <TopBar
+            title="History"
+            startAdornment={null}
+            endAdornment={
+              <Button size="icon" variant="tertiary" onClick={() => setHistoryOpen(false)} aria-label="Close">
+                <Xmark className="h-4 w-4" />
+              </Button>
+            }
+          />
+          <div className="px-6">
+            {evolutions.map((evo, i) => (
+              <ListItem
+                key={`${evo.category}-${evo.evolved_at}-${i}`}
+                label={evo.new_title}
+                description={`${evo.category.toUpperCase()} · ${formatRelativeTime(evo.evolved_at)}`}
+              />
+            ))}
           </div>
         </DrawerContent>
       </Drawer>

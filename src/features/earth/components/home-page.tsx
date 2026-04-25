@@ -38,7 +38,7 @@ export function HomePage({
   }
 
   return (
-    <SafeAreaView edges={['top', 'bottom']} className="fixed inset-0 bg-background">
+    <SafeAreaView edges={['top', 'bottom']} className="animate-fadeIn fixed inset-0 bg-background">
       <div className="mx-auto flex h-full max-w-xl flex-col">
         <main className="flex-1 overflow-y-auto px-6">
           <div className="flex flex-col items-center pt-8">
