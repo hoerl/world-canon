@@ -1,6 +1,7 @@
-import { AgentAttestedCanonRecord } from '@/features/agents/agent-signer';
+import { AgentAttestedCanonRecord, AgentAttestedCanonRecordV2 } from '@/features/agents/agent-signer';
 import { ManagedAgentSigner } from '@/features/agents/managed-agent-signer';
 import { CanonService } from '@/features/canon/canon-service';
+import { buildCanonMapV2, buildPromptTemplate, CanonRecordV2 } from '@/features/canon/domain';
 import { encryptSecret } from '@/lib/crypto';
 import { getAgentBookRpcUrl, getRequiredEnv, hasDatabase } from '@/lib/env';
 import { HttpError } from '@/lib/http';
@@ -130,6 +131,54 @@ export class AgentRegistryService {
       agent.encryptedPrivateKey,
       agent.walletAddress,
       canon,
+    );
+
+    await getDb()
+      .update(agentIdentities)
+      .set({
+        lastAttestedAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .where(eq(agentIdentities.id, agent.id));
+
+    return signedCanon;
+  }
+
+  async getSignedCanonV2BySlug(slug: string): Promise<AgentAttestedCanonRecordV2> {
+    const canon = await this.canonService.getCanonBySlug(slug);
+    if (!canon) {
+      throw new HttpError(404, 'Crate not found');
+    }
+
+    const [user] = await getDb().select().from(users).where(eq(users.publicSlug, slug)).limit(1);
+    if (!user) {
+      throw new HttpError(404, 'Crate owner not found');
+    }
+
+    const agent = await this.getActiveAgentByUserId(user.id);
+    if (!agent) {
+      throw new HttpError(404, 'Crate-Agent not found');
+    }
+
+    const evolutions = await this.canonService.listEvolutionsByUserId(user.id);
+    const canonMapV2 = buildCanonMapV2(canon.canon, evolutions);
+
+    const canonRecordV2: CanonRecordV2 = {
+      schema: 'crate-agent-v2',
+      slug: canon.slug,
+      username: canon.username,
+      updated_at: canon.updated_at,
+      canon: canonMapV2,
+      evolutions_count: canon.evolutions_count,
+      prompt_template: buildPromptTemplate(),
+    };
+
+    const signedCanon = await this.signer.signCanonV2(
+      agent.encryptedPrivateKey,
+      agent.walletAddress,
+      agent.registrationStatus === 'registered',
+      agent.registeredAt,
+      canonRecordV2,
     );
 
     await getDb()

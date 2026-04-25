@@ -1,5 +1,9 @@
-import { AgentAttestedCanonRecord, AgentSigner } from '@/features/agents/agent-signer';
-import { CanonRecord } from '@/features/canon/domain';
+import {
+  AgentAttestedCanonRecord,
+  AgentAttestedCanonRecordV2,
+  AgentSigner,
+} from '@/features/agents/agent-signer';
+import { CanonRecord, CanonRecordV2 } from '@/features/canon/domain';
 import { canonicalJsonStringify, decryptSecret } from '@/lib/crypto';
 import { getRequiredEnv } from '@/lib/env';
 import { privateKeyToAccount } from 'viem/accounts';
@@ -41,6 +45,36 @@ export class ManagedAgentSigner implements AgentSigner {
         signature,
         schema_version: SCHEMA_VERSION,
       },
+    };
+  }
+
+  async signCanonV2(
+    encryptedPrivateKey: string,
+    agentAddress: string,
+    registered: boolean,
+    registeredAt: Date | null,
+    canonRecord: CanonRecordV2,
+  ): Promise<AgentAttestedCanonRecordV2> {
+    const signedAt = new Date().toISOString();
+    const privateKey = decryptSecret(
+      encryptedPrivateKey,
+      getRequiredEnv('AGENT_ENCRYPTION_SECRET'),
+    ) as Hex;
+
+    const account = privateKeyToAccount(privateKey);
+    const signature = await account.signMessage({
+      message: canonicalJsonStringify(canonRecord),
+    });
+
+    return {
+      ...canonRecord,
+      agent: {
+        address: agentAddress,
+        registered,
+        registered_at: registeredAt?.toISOString() ?? null,
+      },
+      signature,
+      signed_at: signedAt,
     };
   }
 }
