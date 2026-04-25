@@ -1,7 +1,7 @@
 ---
 title: Polish v06 Design System & Component Consistency
 type: feat
-status: active
+status: completed
 date: 2026-04-25
 ---
 
