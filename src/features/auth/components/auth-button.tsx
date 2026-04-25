@@ -11,7 +11,7 @@ type AuthButtonProps = {
   username: string | null;
 };
 
-export function AuthButton({ isAuthenticated, username }: AuthButtonProps) {
+export function AuthButton({ isAuthenticated }: AuthButtonProps) {
   const router = useRouter();
   const { toast } = useToast();
 

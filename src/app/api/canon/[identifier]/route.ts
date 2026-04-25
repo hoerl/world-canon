@@ -11,7 +11,7 @@ export async function GET(
     const { identifier } = await params;
     const canon = await new CanonService().getCanonBySlug(identifier);
     if (!canon) {
-      throw new HttpError(404, 'Canon not found');
+      throw new HttpError(404, 'Crate not found');
     }
 
     return jsonOk(canon);

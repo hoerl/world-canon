@@ -18,7 +18,7 @@ export function PublicCanonPage({
 
   const shareCanon = async () => {
     if (!MiniKit.isInWorldApp()) {
-      toast.error({ title: 'Open Canon in World App to share in World Chat.' });
+      toast.error({ title: 'Open Crate in World App to share in World Chat.' });
       return;
     }
 

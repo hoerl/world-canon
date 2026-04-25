@@ -6,7 +6,7 @@ export async function POST() {
   try {
     const session = await getOptionalSession();
     if (!session?.worldSessionId) {
-      throw new HttpError(403, 'Bind World ID before rotating a Canon-Agent');
+      throw new HttpError(403, 'Bind World ID before rotating a Crate-Agent');
     }
 
     const agent = await new AgentRegistryService().rotateManagedAgent(session.worldSessionId);

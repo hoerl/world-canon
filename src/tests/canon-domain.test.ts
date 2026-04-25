@@ -1,7 +1,7 @@
 import {
   createEmptyCanonMap,
   normalizeCanonTitle,
-  slugifyCanonUserName,
+  slugifyCrateUserName,
 } from '@/features/canon/domain';
 import { describe, expect, it } from 'vitest';
 
@@ -11,7 +11,11 @@ describe('canon domain helpers', () => {
   });
 
   it('creates safe slugs', () => {
-    expect(slugifyCanonUserName(' Léa / Canon ')).toBe('l-a-canon');
+    expect(slugifyCrateUserName(' Léa / Canon ')).toBe('l-a-canon');
+  });
+
+  it('falls back to "crate" for empty slugs', () => {
+    expect(slugifyCrateUserName('   ')).toBe('crate');
   });
 
   it('creates an empty canon map', () => {

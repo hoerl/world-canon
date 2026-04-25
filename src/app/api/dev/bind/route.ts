@@ -1,5 +1,5 @@
 import { CanonService } from '@/features/canon/canon-service';
-import { slugifyCanonUserName } from '@/features/canon/domain';
+import { slugifyCrateUserName } from '@/features/canon/domain';
 import { isDemoSeedEnabled } from '@/lib/env';
 import { HttpError, jsonOk, handleRouteError } from '@/lib/http';
 import { createSessionCookie, getOptionalSession } from '@/lib/session';
@@ -35,7 +35,7 @@ export async function POST() {
         verificationLevel: 'dev_bypass',
       });
     } else {
-      const baseSlug = slugifyCanonUserName(session.username ?? session.walletAddress);
+      const baseSlug = slugifyCrateUserName(session.username ?? session.walletAddress);
       let slug = baseSlug;
       let attempt = 0;
       while (await canonService.isSlugTaken(slug)) {

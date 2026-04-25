@@ -47,7 +47,7 @@ export function normalizeCanonTitle(title: string) {
   return title.trim().toLowerCase().replace(/\s+/g, ' ');
 }
 
-export function slugifyCanonUserName(value: string) {
+export function slugifyCrateUserName(value: string) {
   const slug = value
     .trim()
     .toLowerCase()
@@ -55,7 +55,7 @@ export function slugifyCanonUserName(value: string) {
     .replace(/^-+|-+$/g, '')
     .slice(0, 48);
 
-  return slug.length > 0 ? slug : 'canon';
+  return slug.length > 0 ? slug : 'crate';
 }
 
 export function isCanonCategory(value: string): value is CanonCategory {
