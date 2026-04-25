@@ -184,17 +184,13 @@ export class CanonService {
     };
   }
 
-  async listEvolutionsBySlug(slug: string): Promise<CanonEvolutionRecord[]> {
-    const user = await this.getUserBySlug(slug);
-    if (!user) {
-      throw new HttpError(404, 'Crate not found');
-    }
-
+  async listEvolutionsByUserId(userId: string): Promise<CanonEvolutionRecord[]> {
+    this.ensureDatabase();
     const db = getDb();
     const rows = await db
       .select()
       .from(canonEvolutions)
-      .where(eq(canonEvolutions.userId, user.id))
+      .where(eq(canonEvolutions.userId, userId))
       .orderBy(desc(canonEvolutions.evolvedAt));
 
     return rows.map((row) => ({
@@ -206,6 +202,14 @@ export class CanonService {
       change_kind: row.changeKind,
       evolved_at: row.evolvedAt.toISOString(),
     }));
+  }
+
+  async listEvolutionsBySlug(slug: string): Promise<CanonEvolutionRecord[]> {
+    const user = await this.getUserBySlug(slug);
+    if (!user) {
+      throw new HttpError(404, 'Crate not found');
+    }
+    return this.listEvolutionsByUserId(user.id);
   }
 
   async upsertCanonSlot(

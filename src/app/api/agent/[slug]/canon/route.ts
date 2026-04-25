@@ -7,7 +7,7 @@ export async function GET(
 ) {
   try {
     const { slug } = await params;
-    const signedCanon = await new AgentRegistryService().getSignedCanonBySlug(slug);
+    const signedCanon = await new AgentRegistryService().getSignedCanonV2BySlug(slug);
     return jsonOk(signedCanon);
   } catch (error) {
     return handleRouteError(error);
