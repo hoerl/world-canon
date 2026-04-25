@@ -10,6 +10,7 @@ import {
   Drawer,
   DrawerContent,
   SafeAreaView,
+  TopBar,
   Typography,
   useToast,
 } from '@worldcoin/mini-apps-ui-kit-react';
@@ -73,8 +74,9 @@ export function MyCanonPage({ session, canon, evolutions, agent }: MyCanonPagePr
     try {
       const publicUrl = `${window.location.origin}/u/${canon.slug}`;
       await MiniKit.chat({ message: buildWorldChatShareMessage(canon, publicUrl) });
-    } catch (error) {
-      toast.error({ title: error instanceof Error ? error.message : 'Share failed' });
+    } catch {
+      // World App shows its own native error toast for chat failures —
+      // suppress ours to avoid duplicate error UI (see IMG_8814).
     }
   };
 
@@ -109,32 +111,28 @@ export function MyCanonPage({ session, canon, evolutions, agent }: MyCanonPagePr
   return (
     <SafeAreaView edges={['top', 'bottom']} className="fixed inset-0 bg-background">
       <div className="mx-auto flex h-full max-w-xl flex-col">
-        <header className="flex-none px-6 pt-4 pb-2">
-          <div className="flex items-center">
+        <TopBar
+          title="My Crate"
+          startAdornment={
             <Link href="/" aria-label="Close">
-              <Button size="icon" variant="tertiary" asChild>
-                <span><Xmark className="h-5 w-5" /></span>
-              </Button>
+              <Xmark className="h-5 w-5" />
             </Link>
-            <div className="flex-1 text-center">
-              <Typography variant="heading" level={1}>
-                My Crate
-              </Typography>
-            </div>
+          }
+          endAdornment={
             <Button size="icon" variant="tertiary" onClick={shareCanon} aria-label="Share">
               <ShareIos className="h-5 w-5" />
             </Button>
-          </div>
-          {canon && (
-            <Typography variant="body" level={3} className="mt-1 text-center text-gray-400">
-              Last updated {formatRelativeTime(canon.updated_at)}
-            </Typography>
-          )}
-        </header>
+          }
+        />
+        {canon && (
+          <Typography variant="body" level={3} className="px-6 text-center text-gray-400">
+            Last updated {formatRelativeTime(canon.updated_at)}
+          </Typography>
+        )}
 
         <main className="flex-1 overflow-y-auto px-6">
           <div className="flex flex-col items-center pt-4">
-            <div className="mb-6 h-52 w-52 rounded-lg bg-gray-900" />
+            <div className="mb-5 h-52 w-52 rounded-2xl bg-gray-900" />
 
             <FadingTextList items={crateItems} align="center" />
 
@@ -159,15 +157,11 @@ export function MyCanonPage({ session, canon, evolutions, agent }: MyCanonPagePr
           </div>
         </main>
 
-        <div className="flex-none px-6 pb-6">
+        <div className="flex-none px-6 pb-8">
           <div className="flex justify-center">
-            <button
-              type="button"
-              onClick={openAddDrawer}
-              className="min-h-[44px] rounded-full bg-gray-900 px-8 py-3 text-base font-medium text-white active:scale-[0.97] transition-transform"
-            >
+            <Button variant="primary" size="lg" onClick={openAddDrawer}>
               Add to Crate
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -180,7 +174,7 @@ export function MyCanonPage({ session, canon, evolutions, agent }: MyCanonPagePr
               {evolutions.map((evo, i) => (
                 <div key={`${evo.category}-${evo.evolved_at}-${i}`} className="flex items-baseline justify-between">
                   <div className="flex items-baseline gap-2 min-w-0">
-                    <Typography variant="label" level={2} className="shrink-0 text-[10px] uppercase text-gray-400">
+                    <Typography variant="label" level={2} className="shrink-0 uppercase text-gray-400">
                       {evo.category}
                     </Typography>
                     <Typography variant="body" level={2} className="truncate text-gray-900">

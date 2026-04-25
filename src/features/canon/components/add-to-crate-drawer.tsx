@@ -9,13 +9,20 @@ import {
   DrawerContent,
   Input,
   Typography,
+  useHaptics,
   useToast,
 } from '@worldcoin/mini-apps-ui-kit-react';
-import { Xmark } from '@worldcoin/mini-apps-ui-kit-react/icons';
+import { Airplane, Xmark } from '@worldcoin/mini-apps-ui-kit-react/icons';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
 type Step = 1 | 2 | 3;
+
+const categoryLabels: Record<CanonCategory, string> = {
+  person: 'Person',
+  place: 'Place',
+  thing: 'Thing',
+};
 
 const categoryQuestions: Record<CanonCategory, string> = {
   person: 'Who are they?',
@@ -23,10 +30,26 @@ const categoryQuestions: Record<CanonCategory, string> = {
   thing: 'What thing?',
 };
 
+function SendButton({ disabled, onClick }: { disabled: boolean; onClick: () => void }) {
+  return (
+    <Button
+      size="icon"
+      variant="tertiary"
+      disabled={disabled}
+      onClick={onClick}
+      aria-label="Send"
+      type="button"
+    >
+      <Airplane className="h-4 w-4" />
+    </Button>
+  );
+}
+
 export function AddToCrateDrawer() {
   const { isOpen, close } = useAddToCrate();
   const router = useRouter();
   const { toast } = useToast();
+  const haptics = useHaptics();
 
   const [step, setStep] = useState<Step>(1);
   const [category, setCategory] = useState<CanonCategory | null>(null);
@@ -58,12 +81,14 @@ export function AddToCrateDrawer() {
   };
 
   const selectCategory = (cat: CanonCategory) => {
+    haptics.selection();
     setCategory(cat);
     setStep(2);
   };
 
   const submitTitle = () => {
     if (!title.trim()) return;
+    haptics.impact('light');
     setStep(3);
   };
 
@@ -83,10 +108,12 @@ export function AddToCrateDrawer() {
         throw new Error(json?.error ?? 'Failed to save');
       }
 
+      haptics.notification('success');
       toast.success({ title: 'Added to your crate.' });
       close();
       router.refresh();
     } catch (error) {
+      haptics.notification('error');
       toast.error({ title: error instanceof Error ? error.message : 'Failed to save' });
     } finally {
       setIsSaving(false);
@@ -117,14 +144,15 @@ export function AddToCrateDrawer() {
             </Typography>
             <div className="space-y-3">
               {(['person', 'place', 'thing'] as const).map((cat) => (
-                <button
+                <Button
                   key={cat}
-                  type="button"
+                  variant="tertiary"
+                  size="lg"
+                  fullWidth
                   onClick={() => selectCategory(cat)}
-                  className="w-full rounded-2xl border border-gray-200 py-3.5 text-center text-base font-medium text-gray-900 transition-colors active:bg-gray-50"
                 >
-                  {cat.charAt(0).toUpperCase() + cat.slice(1)}
-                </button>
+                  {categoryLabels[cat]}
+                </Button>
               ))}
             </div>
           </div>
@@ -133,22 +161,19 @@ export function AddToCrateDrawer() {
         {step === 2 && category && (
           <div className="pt-4">
             <DrawerNav title="What Inspires You" onBack={goBack} onClose={close} />
-            <Typography variant="heading" level={2} className="mb-6">
+            <Typography variant="heading" level={2} className="mb-4">
               {categoryQuestions[category]}
             </Typography>
             <form onSubmit={(e) => { e.preventDefault(); submitTitle(); }}>
               <Input
                 ref={titleRef}
-                label={category.charAt(0).toUpperCase() + category.slice(1)}
-                variant="floating-label"
+                label={categoryLabels[category]}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+                endAdornment={
+                  <SendButton disabled={!title.trim()} onClick={submitTitle} />
+                }
               />
-              <div className="mt-6">
-                <Button type="submit" fullWidth disabled={!title.trim()}>
-                  Next
-                </Button>
-              </div>
             </form>
           </div>
         )}
@@ -162,22 +187,22 @@ export function AddToCrateDrawer() {
             <Typography variant="body" level={2} className="mb-4 text-gray-500">
               {title}
             </Typography>
-            <Typography variant="heading" level={2} className="mb-6">
+            <Typography variant="heading" level={2} className="mb-4">
               Why do they matter to you?
             </Typography>
             <form onSubmit={(e) => { e.preventDefault(); submitRationale(); }}>
               <Input
                 ref={rationaleRef}
                 label="Your reason"
-                variant="floating-label"
                 value={rationale}
                 onChange={(e) => setRationale(e.target.value)}
+                endAdornment={
+                  <SendButton
+                    disabled={isSaving || !rationale.trim()}
+                    onClick={submitRationale}
+                  />
+                }
               />
-              <div className="mt-6">
-                <Button type="submit" fullWidth disabled={isSaving || !rationale.trim()}>
-                  {isSaving ? 'Saving…' : 'Save'}
-                </Button>
-              </div>
             </form>
           </div>
         )}
