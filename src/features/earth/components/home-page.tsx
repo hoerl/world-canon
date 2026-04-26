@@ -43,7 +43,7 @@ export function HomePage({
         <main className="flex-1 overflow-y-auto px-6" style={{ overscrollBehaviorY: 'auto' }}>
           <div className="flex flex-col items-center pt-8">
             <Typography as="h1" variant="heading" level={1} className="text-center">
-              Earth
+              Taste of Humanity
             </Typography>
             <Typography variant="body" level={3} className="text-gray-400">
               Connected
