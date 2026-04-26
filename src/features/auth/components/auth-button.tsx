@@ -56,8 +56,17 @@ export function AuthButton({ isAuthenticated }: AuthButtonProps) {
         throw new Error(json?.error ?? 'Sign in failed');
       }
 
+      const { session } = (await response.json().catch(() => ({}))) as {
+        session?: { worldSessionId: string | null };
+      };
+
       toast.success({ title: 'Signed in.' });
-      router.refresh();
+
+      if (!session?.worldSessionId) {
+        router.push('/me');
+      } else {
+        router.refresh();
+      }
     } catch (error) {
       toast.error({
         title: error instanceof Error ? error.message : 'Sign in failed',
