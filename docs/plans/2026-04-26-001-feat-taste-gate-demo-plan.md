@@ -1,7 +1,7 @@
 ---
 title: "feat: Taste Gate demo — Crate as cultural credential"
 type: feat
-status: active
+status: completed
 date: 2026-04-26
 origin: docs/brainstorms/2026-04-26-agent-crate-use-cases-brainstorm.md
 ---
@@ -114,16 +114,16 @@ type GateVerdict = {
 
 ## Acceptance Criteria
 
-- [ ] `/demo/taste-gate` page loads with gate selection UI
-- [ ] Entering a valid slug + selecting a gate streams a Claude verdict
-- [ ] Verdict displays as "You're in" or "Not quite" with reasoning
-- [ ] Reasoning references specific Crate data (slot titles, rationales, evolution arc)
-- [ ] "Not quite" verdicts include a constructive suggestion
-- [ ] Invalid slug → 404 error toast
-- [ ] Empty Crate → 422 error toast
-- [ ] Invalid gate → 400 error toast
-- [ ] Abort streaming on navigation or re-selection
-- [ ] At least 3 distinct gates with meaningful evaluation criteria
+- [x] `/demo/taste-gate` page loads with gate selection UI
+- [x] Entering a valid slug + selecting a gate streams a Claude verdict
+- [x] Verdict displays as "You're in" or "Not quite" with reasoning
+- [x] Reasoning references specific Crate data (slot titles, rationales, evolution arc)
+- [x] "Not quite" verdicts include a constructive suggestion
+- [x] Invalid slug → 404 error toast
+- [x] Empty Crate → 422 error toast
+- [x] Invalid gate → 400 error toast
+- [x] Abort streaming on navigation or re-selection
+- [x] At least 3 distinct gates with meaningful evaluation criteria
 
 ## Implementation Sequence
 
