@@ -1,9 +1,13 @@
 'use client';
 
 import { Button, Typography, VerificationBadge, useToast } from '@worldcoin/mini-apps-ui-kit-react';
-import { CredentialRequest, IDKitSessionWidget, any } from '@worldcoin/idkit';
+import { CredentialRequest, IDKitSessionWidget, any, setDebug } from '@worldcoin/idkit';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+
+if (process.env.NEXT_PUBLIC_WORLD_ENV !== 'production') {
+  setDebug(true);
+}
 
 type WorldIdSessionCardProps = {
   isBound: boolean;
@@ -82,9 +86,18 @@ export function WorldIdSessionCard({ isBound }: WorldIdSessionCardProps) {
       if (!response.ok) {
         throw new Error(json.error ?? 'Failed to start World ID binding');
       }
+      console.log('[WorldID] RP context received', {
+        rp_id: json.rp_id,
+        nonce: json.nonce.slice(0, 12) + '…',
+        created_at: json.created_at,
+        expires_at: json.expires_at,
+        ttl_seconds: json.expires_at - json.created_at,
+        now: Math.floor(Date.now() / 1000),
+      });
       setRpContext(json);
       setOpen(true);
     } catch (error) {
+      console.error('[WorldID] startBinding failed', error);
       toast.error({ title: error instanceof Error ? error.message : 'Failed to bind World ID' });
     }
   };
@@ -114,6 +127,12 @@ export function WorldIdSessionCard({ isBound }: WorldIdSessionCardProps) {
             process.env.NEXT_PUBLIC_WORLD_ENV === 'production' ? 'production' : 'staging'
           }
           handleVerify={async (result) => {
+            console.log('[WorldID] handleVerify called', {
+              protocol_version: result.protocol_version,
+              session_id: result.session_id,
+              responses: result.responses.length,
+              environment: result.environment,
+            });
             const response = await fetch('/api/worldid/verify', {
               method: 'POST',
               headers: {
@@ -124,15 +143,23 @@ export function WorldIdSessionCard({ isBound }: WorldIdSessionCardProps) {
 
             if (!response.ok) {
               const json = (await response.json().catch(() => null)) as { error?: string } | null;
+              console.error('[WorldID] Backend verification failed', {
+                status: response.status,
+                error: json,
+              });
               throw new Error(json?.error ?? 'World ID verification failed');
             }
+            console.log('[WorldID] Backend verification succeeded');
           }}
           onSuccess={async () => {
             toast.success({ title: 'Crate bound to your World ID.' });
             router.refresh();
           }}
           onError={(errorCode) => {
-            toast.error({ title: `World ID error: ${errorCode}` });
+            console.error('[WorldID] IDKit onError', errorCode);
+            toast.error({
+              title: `World ID error: ${errorCode}. Check console for details.`,
+            });
           }}
         />
       ) : null}

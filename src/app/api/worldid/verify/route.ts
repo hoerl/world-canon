@@ -5,6 +5,10 @@ import { createSessionCookie, getOptionalSession } from '@/lib/session';
 export async function POST(request: Request) {
   try {
     const session = await getOptionalSession();
+    console.log('[worldid/verify] POST', {
+      hasSession: Boolean(session),
+      wallet: session?.walletAddress?.slice(0, 10),
+    });
     if (!session) {
       throw new HttpError(401, 'Sign in before binding World ID');
     }
@@ -16,6 +20,11 @@ export async function POST(request: Request) {
       ...session,
       username: user.worldUsername,
       worldSessionId: user.worldSessionId as `session_${string}`,
+    });
+
+    console.log('[worldid/verify] Success', {
+      slug: user.publicSlug,
+      sessionId: user.worldSessionId,
     });
 
     return jsonOk({

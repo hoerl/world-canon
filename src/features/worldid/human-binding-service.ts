@@ -22,8 +22,19 @@ export class HumanBindingService {
       signingKeyHex: getRequiredEnv('RP_SIGNING_KEY'),
     });
 
+    const rpId = getRequiredEnv('RP_ID');
+    const now = Math.floor(Date.now() / 1000);
+    console.log('[worldid/rp-context] Generated RP signature', {
+      rp_id: rpId,
+      created_at: signature.createdAt,
+      expires_at: signature.expiresAt,
+      ttl_seconds: signature.expiresAt - signature.createdAt,
+      server_now: now,
+      clock_drift: now - signature.createdAt,
+    });
+
     return {
-      rp_id: getRequiredEnv('RP_ID'),
+      rp_id: rpId,
       nonce: signature.nonce,
       created_at: signature.createdAt,
       expires_at: signature.expiresAt,
@@ -41,32 +52,46 @@ export class HumanBindingService {
   ) {
     const parsed = sessionProofSchema.safeParse(rawProof);
     if (!parsed.success) {
+      console.error('[worldid/verify] Schema validation failed', parsed.error.flatten());
       throw new HttpError(400, 'Invalid World ID session proof');
     }
 
-    const verifyResponse = await fetch(
-      `https://developer.world.org/api/v4/verify/${getRequiredEnv('RP_ID')}`,
-      {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify(parsed.data),
-      },
-    );
+    const rpId = getRequiredEnv('RP_ID');
+    const verifyUrl = `https://developer.world.org/api/v4/verify/${rpId}`;
+    console.log('[worldid/verify] Forwarding to World API', {
+      url: verifyUrl,
+      protocol_version: parsed.data.protocol_version,
+      session_id: parsed.data.session_id,
+      environment: parsed.data.environment,
+      responses: parsed.data.responses.length,
+    });
 
-    const verifyPayload = (await verifyResponse.json().catch(() => null)) as
-      | {
-          detail?: string;
-          code?: string;
-        }
-      | null;
+    const verifyResponse = await fetch(verifyUrl, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(parsed.data),
+    });
+
+    const verifyPayload = (await verifyResponse.json().catch(() => null)) as Record<
+      string,
+      unknown
+    > | null;
+
+    console.log('[worldid/verify] World API response', {
+      status: verifyResponse.status,
+      ok: verifyResponse.ok,
+      payload: verifyPayload,
+    });
 
     if (!verifyResponse.ok) {
-      throw new HttpError(
-        verifyResponse.status,
-        verifyPayload?.detail ?? 'World ID verification failed',
-      );
+      const detail =
+        (verifyPayload?.detail as string) ??
+        (verifyPayload?.message as string) ??
+        (verifyPayload?.code as string) ??
+        'World ID verification failed';
+      throw new HttpError(verifyResponse.status, `${detail} (HTTP ${verifyResponse.status})`);
     }
 
     const existingUser = await this.canonService.getUserByWorldSessionId(parsed.data.session_id);
