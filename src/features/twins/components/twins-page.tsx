@@ -3,7 +3,7 @@
 import { TwinMatch } from '@/features/twins/domain';
 import { TwinCard } from '@/features/twins/components/twin-card';
 import { AppBottomBar } from '@/features/ui/app-bottom-bar';
-import { Button, SafeAreaView, TopBar, Typography } from '@worldcoin/mini-apps-ui-kit-react';
+import { Button, SafeAreaView, Spinner, TopBar, Typography } from '@worldcoin/mini-apps-ui-kit-react';
 import { Xmark } from '@worldcoin/mini-apps-ui-kit-react/icons';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
@@ -62,18 +62,22 @@ export function TwinsPage({ session, mySlug, hasCrate }: TwinsPageProps) {
     <SafeAreaView edges={['top', 'bottom']} className="animate-fadeIn fixed inset-0 bg-background">
       <div className="mx-auto flex h-full max-w-xl flex-col">
         <TopBar
-          title="Taste Twins"
+          title="Shared Taste"
           startAdornment={
-            <Link href="/" aria-label="Back">
-              <Xmark className="h-5 w-5" />
-            </Link>
+            <Button size="icon" variant="tertiary" asChild>
+              <Link href="/" aria-label="Back">
+                <Xmark className="h-5 w-5" />
+              </Link>
+            </Button>
           }
         />
 
         <main className="flex-1 overflow-y-auto px-6">
           {loading && !loaded && (
-            <div className="flex flex-col items-center pt-20">
-              <div className="mb-4 h-12 w-12 animate-spin rounded-full border-2 border-gray-200 border-t-gray-900" />
+            <div className="flex flex-col items-center pt-16">
+              <div className="mb-4">
+                <Spinner />
+              </div>
               <Typography variant="body" level={2} className="text-gray-400">
                 Finding your taste twins...
               </Typography>
@@ -81,7 +85,7 @@ export function TwinsPage({ session, mySlug, hasCrate }: TwinsPageProps) {
           )}
 
           {loaded && !hasCrate && (
-            <div className="flex flex-col items-center pt-20 text-center">
+            <div className="flex flex-col items-center pt-16 text-center">
               <Typography variant="heading" level={3} className="mb-2">
                 Fill your Crate first
               </Typography>
@@ -95,7 +99,7 @@ export function TwinsPage({ session, mySlug, hasCrate }: TwinsPageProps) {
           )}
 
           {loaded && hasCrate && twins.length === 0 && !loading && (
-            <div className="flex flex-col items-center pt-20 text-center">
+            <div className="flex flex-col items-center pt-16 text-center">
               <Typography variant="heading" level={3} className="mb-2">
                 No twins yet
               </Typography>

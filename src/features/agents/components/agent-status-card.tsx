@@ -60,10 +60,10 @@ export function AgentStatusCard({ agent }: AgentStatusCardProps) {
         </Typography>
         {agent ? (
           <>
-            <Typography variant="body" level={3} className="text-gray-600">
+            <Typography variant="body" level={3} className="text-gray-500">
               Wallet: {agent.walletAddress}
             </Typography>
-            <Typography variant="body" level={3} className="text-gray-600">
+            <Typography variant="body" level={3} className="text-gray-500">
               Status: {agent.registrationStatus}
             </Typography>
             <Typography variant="body" level={4} className="text-gray-500">
@@ -77,7 +77,7 @@ export function AgentStatusCard({ agent }: AgentStatusCardProps) {
           </>
         ) : (
           <>
-            <Typography variant="body" level={3} className="text-gray-600">
+            <Typography variant="body" level={3} className="text-gray-500">
               Provision a managed Crate-Agent wallet so your crate can be signed for the agentic
               web.
             </Typography>

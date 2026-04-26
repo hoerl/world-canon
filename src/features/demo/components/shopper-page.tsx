@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, SafeAreaView, Typography, useToast } from '@worldcoin/mini-apps-ui-kit-react';
+import { Button, Input, SafeAreaView, Spinner, TopBar, Typography, useToast } from '@worldcoin/mini-apps-ui-kit-react';
 import { Xmark } from '@worldcoin/mini-apps-ui-kit-react/icons';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
@@ -117,37 +117,33 @@ export function ShopperPage({ defaultSlug }: { defaultSlug: string | null }) {
   return (
     <SafeAreaView edges={['top', 'bottom']} className="fixed inset-0 bg-background">
       <div className="mx-auto flex h-full max-w-xl flex-col">
-        <header className="flex-none px-6 pt-2 pb-1">
-          <div className="flex items-center justify-between">
-            <Typography as="h1" variant="heading" level={1}>
-              Gift Finder
-            </Typography>
-            <Link href="/">
-              <Button size="icon" variant="tertiary" aria-label="Close">
+        <TopBar
+          title="Gift Finder"
+          endAdornment={
+            <Button size="icon" variant="tertiary" asChild aria-label="Close">
+              <Link href="/">
                 <Xmark className="h-5 w-5" />
-              </Button>
-            </Link>
-          </div>
-          <Typography as="p" variant="body" level={3} className="mt-1 text-gray-500">
-            AI-curated gifts based on a Crate&apos;s taste profile.
-          </Typography>
-        </header>
+              </Link>
+            </Button>
+          }
+        />
+        <Typography as="p" variant="body" level={3} className="px-6 text-gray-500">
+          AI-curated gifts based on a Crate&apos;s taste profile.
+        </Typography>
 
         <main className="flex-1 overflow-y-auto px-6 pt-4 pb-8">
-          {/* Slug input */}
           <div className="rounded-3xl border border-gray-200 bg-white p-4">
             <Typography variant="body" level={3} className="mb-3 text-gray-500">
               Enter a WorldID to find the perfect gift
             </Typography>
-            <div className="flex items-center gap-3">
-              <input
-                type="text"
-                value={slug}
-                onChange={(e) => setSlug(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-                placeholder="e.g. matt"
-                className="flex-1 rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none focus:border-gray-400"
-              />
+            <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="flex items-center gap-3">
+              <div className="flex-1">
+                <Input
+                  label="e.g. matt"
+                  value={slug}
+                  onChange={(e) => setSlug(e.target.value)}
+                />
+              </div>
               <Button
                 size="sm"
                 variant="primary"
@@ -156,7 +152,7 @@ export function ShopperPage({ defaultSlug }: { defaultSlug: string | null }) {
               >
                 {status === 'streaming' ? 'Finding...' : 'Find Gifts'}
               </Button>
-            </div>
+            </form>
           </div>
 
           {(status === 'streaming' || (status === 'done' && gifts.length > 0)) && (
@@ -203,7 +199,7 @@ export function ShopperPage({ defaultSlug }: { defaultSlug: string | null }) {
                 {status === 'streaming' && (
                   <div className="rounded-3xl border border-gray-200 bg-white p-4">
                     <div className="flex items-center gap-3">
-                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-gray-600" />
+                      <Spinner />
                       <Typography variant="body" level={3} className="text-gray-400">
                         {gifts.length === 0 ? 'Curating gifts...' : 'Finding more...'}
                       </Typography>
@@ -225,7 +221,6 @@ export function ShopperPage({ defaultSlug }: { defaultSlug: string | null }) {
             </div>
           )}
 
-          {/* Error state */}
           {status === 'error' && errorMessage && (
             <div className="mt-6 rounded-3xl border border-amber-200 bg-amber-50 p-4">
               <Typography variant="body" level={2} className="text-amber-800">

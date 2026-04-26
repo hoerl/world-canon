@@ -23,7 +23,7 @@ export function LandingPage() {
     <SafeAreaView edges={['top', 'bottom']} className="fixed inset-0 bg-white">
       <div className="mx-auto flex h-full max-w-xl flex-col px-6">
         <div className="flex-1 overflow-y-auto pt-10">
-          <div className="mb-4 h-10 w-10 bg-gray-900" />
+          <div className="mb-4 h-10 w-10 rounded-lg bg-gray-900" />
 
           <Typography as="h1" variant="display" level={1} className="mb-10">
             <span className="block">Real</span>
@@ -33,17 +33,17 @@ export function LandingPage() {
 
           <BulletList>
             <BulletListItem bulletPoint={<SparkBullet />}>
-              <Typography variant="body" level={2} className="text-gray-700">
+              <Typography variant="body" level={2} className="text-gray-500">
                 Fill your <strong>Crate</strong> with People, Places, and Things that inspire you
               </Typography>
             </BulletListItem>
             <BulletListItem bulletPoint={<SparkBullet />}>
-              <Typography variant="body" level={2} className="text-gray-700">
+              <Typography variant="body" level={2} className="text-gray-500">
                 <strong>Deploy your Crate</strong> on the Agentic Web.
               </Typography>
             </BulletListItem>
             <BulletListItem bulletPoint={<SparkBullet />}>
-              <Typography variant="body" level={2} className="text-gray-700">
+              <Typography variant="body" level={2} className="text-gray-500">
                 <strong>Share your Crate</strong> with Others on World Chat.
               </Typography>
             </BulletListItem>

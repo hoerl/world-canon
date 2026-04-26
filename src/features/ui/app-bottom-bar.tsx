@@ -19,7 +19,7 @@ export function AppBottomBar() {
         <Link
           href="/twins"
           className={`flex h-10 w-10 items-center justify-center ${isOnTwins ? 'text-gray-900' : 'text-gray-500'}`}
-          aria-label="Taste Twins"
+          aria-label="Shared Taste"
         >
           <Group className="h-5 w-5" />
         </Link>
@@ -30,7 +30,7 @@ export function AppBottomBar() {
 
         <Link
           href="/me"
-          className="flex h-10 w-10 items-center justify-center text-gray-500"
+          className={`flex h-10 w-10 items-center justify-center ${isOnMe ? 'text-gray-900' : 'text-gray-500'}`}
           aria-label="My Crate"
         >
           <ProfileIcon className="h-5 w-5" />

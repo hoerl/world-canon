@@ -95,7 +95,7 @@ export function WorldIdSessionCard({ isBound }: WorldIdSessionCardProps) {
         <Typography variant="subtitle" level={2}>
           Bind your Crate to one verified human
         </Typography>
-        <Typography variant="body" level={3} className="text-gray-600">
+        <Typography variant="body" level={3} className="text-gray-500">
           Complete one World ID 4.0 session proof before you create or evolve your crate.
         </Typography>
         <Button fullWidth onClick={startBinding}>
