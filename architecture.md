@@ -20,6 +20,7 @@ The app uses:
 - World ID 4.0 session proofs for one-human binding
 - World UI Kit for all interactive UI
 - Neon + Drizzle for persistence
+- Claude API (@anthropic-ai/sdk) for gift recommendation demo
 
 ## System Diagram
 
@@ -32,8 +33,10 @@ World App WebView
        -> HumanBindingService
        -> CanonService
        -> EarthService
+       -> TwinMatchingService
        -> AgentRegistryService
        -> AgentSigner
+       -> Claude API (gift recommendations)
        -> Neon Postgres
        -> World verify API
        -> AgentBook lookup
@@ -65,14 +68,37 @@ World App WebView
 
 ### `src/features/earth`
 
-- Earth aggregation
+- Earth aggregation (all entries, sorted by freshness)
 - optional demo seed injection
-- home feed rendering
+- home feed rendering ("Taste of Humanity")
+
+### `src/features/twins`
+
+- taste twin matching service (same-category title match + tag overlap scoring)
+- twin domain types
+- demo seed profiles for twin matching
+- twins page UI with twin cards
+- World Chat "Say Hi" integration for discovered twins
+
+### `src/features/demo`
+
+- Claude-powered gift recommendation engine
+- prompt builder from crate + evolution history
+- streaming shopper page UI
 
 ### `src/features/share`
 
 - World Chat share message builder
 - client share action
+
+### `src/features/ui`
+
+- brand intro animation (glitch → resolve)
+- landing page (unauthenticated)
+- bottom bar navigation (Twins · Add to Crate · Profile)
+- drawer navigation helpers
+- fading text list component
+- circular icon component
 
 ### `src/features/agents`
 
@@ -127,10 +153,31 @@ World App WebView
 
 ### Earth aggregation flow
 
-1. `EarthService` loads canon rows
+1. `EarthService` loads all canon rows
 2. Rows are grouped by `category + title_normalized`
-3. Ranking sorts by votes descending, then freshness descending
-4. Top 10 per category are rendered on the home screen and returned by `GET /api/earth`
+3. Each group accumulates a vote count and tracks the most recent update
+4. All entries are sorted by freshness descending and returned by `GET /api/earth`
+5. When the DB is empty and `DEMO_SEED_ENABLED` is set, a static seed of 50 high-taste items is returned
+
+### Taste Twins flow
+
+1. Authenticated user navigates to `/twins`
+2. Client fetches `GET /api/twins`
+3. `TwinMatchingService` loads the current user's canon items
+4. Service self-joins `canon_items` on `(category, title_normalized)` against all other users
+5. Scoring: 5 points per same-category title match, 1 point per shared tag
+6. Results grouped by matched user, ranked by score, top 10 returned
+7. Each twin card shows overlap highlights and a "Say Hi" button
+8. "Say Hi" opens World Chat compose via `MiniKit.chat()` with context about the shared pick
+
+### Gift recommendation flow (demo)
+
+1. User inputs a crate slug at `/demo/shopper`
+2. Server fetches the target crate and evolution history
+3. Prompt builder assembles crate data + rationales into a Claude system prompt
+4. `POST /api/demo/shopper` streams Claude Sonnet responses as gift recommendations
+5. Client renders gift cards as they stream in, with name, description, price range, and personalized reasoning
+6. User can request additional rounds (previous recommendations are excluded)
 
 ### Canon-Agent flow
 
@@ -152,6 +199,8 @@ World App WebView
 
 - one current slot per category per user
 - unique on `(user_id, category)`
+- stores `title`, `title_normalized`, `rationale`, and `tags` (text array, max 3)
+- indexed on `(category, title_normalized)` for Earth aggregation and twin matching
 
 ### `canon_evolutions`
 
@@ -184,11 +233,24 @@ World App WebView
 - `GET /api/canon/[slug]/evolutions`
 - `GET /api/earth`
 
+### Twins
+
+- `GET /api/twins`
+
 ### Agent
 
 - `POST /api/agent/register`
 - `POST /api/agent/rotate`
 - `GET /api/agent/[slug]/canon`
+
+### Demo
+
+- `GET /api/demo/shopper`
+
+### Dev (gated by `DEMO_SEED_ENABLED`)
+
+- `POST /api/dev/bind`
+- `POST /api/dev/seed-twins`
 
 ## Env Vars and Secrets
 
@@ -208,8 +270,10 @@ World App WebView
   Symmetric secret used to encrypt managed agent private keys at rest.
 - `WORLD_AGENTBOOK_RPC_URL`
   Optional World Chain RPC override for AgentBook lookups.
+- `ANTHROPIC_API_KEY`
+  API key for Claude Sonnet (used by gift recommendation demo).
 - `DEMO_SEED_ENABLED`
-  Enables home screen seed data for non-production/demo environments.
+  Enables demo seed data and dev-only endpoints (bind, seed-twins).
 
 ## Deployment Topology
 
@@ -220,19 +284,24 @@ World App WebView
 
 ## Current Phase Status
 
-- Phase 1 implemented in-app:
+- Phase 1 — core mini app:
   - Wallet Auth
   - World ID 4.0 binding
-  - canon create/evolve
+  - canon create/evolve with tags
   - public canon reads
-  - Earth aggregation
+  - Earth aggregation ("Taste of Humanity" feed)
   - World Chat share
-- Phase 2 implemented at the application layer:
+- Phase 2 — Canon-Agent layer:
   - managed Canon-Agent provisioning
   - encrypted key storage
-  - signed canon endpoint
+  - signed canon endpoint (V2 with evolution history + prompt template)
   - rotation support
   - AgentBook registration-state refresh
+- Phase 3 — social discovery + demo:
+  - Taste Twins matching (same-category title match + tag overlap)
+  - Twins page with "Say Hi" → World Chat
+  - Claude-powered gift recommendation demo
+  - demo seed data for twins and Earth feed
 
 ## Known Constraint
 
