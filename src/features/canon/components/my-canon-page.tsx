@@ -4,6 +4,7 @@ import { useAddToCrate } from '@/features/canon/add-to-crate-context';
 import { CanonEvolutionRecord, CanonRecord, canonCategories } from '@/features/canon/domain';
 import { FadingTextList } from '@/features/ui/fading-text-list';
 import { buildWorldChatShareMessage } from '@/features/share/world-chat';
+import { WorldIdSessionCard } from '@/features/worldid/components/world-id-session-card';
 import {
   Button,
   Chip,
@@ -13,6 +14,7 @@ import {
   SafeAreaView,
   TopBar,
   Typography,
+  VerificationBadge,
   useToast,
 } from '@worldcoin/mini-apps-ui-kit-react';
 import { ShareIos, Xmark } from '@worldcoin/mini-apps-ui-kit-react/icons';
@@ -61,6 +63,28 @@ export function MyCanonPage({ session, canon, evolutions, agent }: MyCanonPagePr
           <Typography variant="body" level={2} className="text-gray-500">
             Sign in to view your crate.
           </Typography>
+        </div>
+      </SafeAreaView>
+    );
+  }
+
+  if (!session.worldSessionId) {
+    return (
+      <SafeAreaView edges={['top', 'bottom']} className="fixed inset-0 bg-background">
+        <div className="mx-auto flex h-full max-w-xl flex-col">
+          <TopBar
+            title="My Crate"
+            startAdornment={
+              <Link href="/" aria-label="Close">
+                <Xmark className="h-5 w-5" />
+              </Link>
+            }
+          />
+          <main className="flex-1 overflow-y-auto px-6">
+            <div className="pt-8">
+              <WorldIdSessionCard isBound={false} />
+            </div>
+          </main>
         </div>
       </SafeAreaView>
     );
@@ -171,6 +195,13 @@ export function MyCanonPage({ session, canon, evolutions, agent }: MyCanonPagePr
               >
                 Deploy Agent &gt;
               </button>
+            </div>
+
+            <div className="mt-6 flex items-center justify-center gap-1.5 text-gray-400">
+              <VerificationBadge verified className="size-4" />
+              <Typography variant="body" level={3} className="text-gray-400">
+                Verified human
+              </Typography>
             </div>
           </div>
         </main>
