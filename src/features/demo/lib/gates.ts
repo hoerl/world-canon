@@ -43,6 +43,19 @@ A trend-follower who picks whatever is currently hyped does NOT qualify. Someone
 - A worldview that connects culture, space, and objects into a personal philosophy
 Someone with random, disconnected picks across slots does NOT qualify. Someone whose three choices reveal a unified creative sensibility — even if eclectic — DOES.`,
   },
+  {
+    id: 'a24-premiere',
+    name: 'A24 Premiere',
+    tagline: 'Invited screening. Limited seats.',
+    criteria: 'Cinematic sensibility that goes beyond mainstream taste',
+    evaluationPrompt: `Evaluate whether this person's Crate signals the kind of cinematic and storytelling sensibility that belongs at an A24 premiere — not a Marvel fan, but someone who gravitates toward auteur vision, emotional texture, and cultural specificity. Look for:
+- Person slot referencing filmmakers, writers, musicians, or visual artists whose work has narrative depth or auteur sensibility
+- Place slot suggesting atmospheric awareness — locations chosen for mood, memory, or meaning rather than tourism
+- Thing slot pointing to objects, media, or artifacts that reward slow attention (books, vinyl, analog tools, artisan craft)
+- Rationales that reveal emotional intelligence — WHY something resonates, not just surface admiration
+- Evolution arc showing taste that deepens rather than chases trends
+Someone whose Crate reads like a mainstream playlist does NOT qualify. Someone whose taste suggests they'd sit through a 3-hour slow burn and feel something DOES.`,
+  },
 ];
 
 export function getGateById(id: string): TasteGate | undefined {
