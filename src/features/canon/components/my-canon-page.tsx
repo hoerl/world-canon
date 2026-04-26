@@ -150,6 +150,11 @@ export function MyCanonPage({ session, canon, evolutions, agent }: MyCanonPagePr
             })()}
 
             <div className="mt-10 space-y-4 text-center">
+              {canon && Object.values(canon.canon).some((slot) => slot !== null) && (
+                <Link href="/twins" className="block w-full text-base text-gray-400">
+                  Find Your Twins &gt;
+                </Link>
+              )}
               {evolutions.length > 0 && (
                 <button
                   type="button"
