@@ -22,20 +22,18 @@ export function EarthFeed({ earth }: { earth: EarthCanon }) {
 
   return (
     <div
-      className="mt-4 -mx-6 flex-1"
+      className="flex-1"
       style={{ overscrollBehaviorY: 'auto', WebkitOverflowScrolling: 'touch' }}
     >
-      <div className="relative">
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-6 bg-gradient-to-b from-background to-transparent" />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-6 bg-gradient-to-t from-background to-transparent" />
-        <div className="px-6">
+      <div>
+        <div className="flex flex-col gap-2 px-6 py-2">
           {earth.map((entry, i) => (
             <ListItem
               key={`${entry.category}-${entry.title}-${i}`}
               label={entry.title}
               description={`${entry.votes} ${entry.votes === 1 ? 'vote' : 'votes'}`}
               startAdornment={
-                <Typography variant="label" level={2} className="w-6 text-center text-gray-300">
+                <Typography variant="label" level={2} className="w-6 text-center text-gray-400">
                   {i + 1}
                 </Typography>
               }

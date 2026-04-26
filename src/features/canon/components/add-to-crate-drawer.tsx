@@ -93,7 +93,6 @@ export function AddToCrateDrawer() {
 
   const submitTitle = () => {
     if (!title.trim()) return;
-    haptics.impact('light');
     setStep(3);
   };
 
@@ -105,7 +104,6 @@ export function AddToCrateDrawer() {
   };
 
   const submitTags = () => {
-    haptics.impact('light');
     setStep(4);
   };
 
@@ -144,7 +142,7 @@ export function AddToCrateDrawer() {
       <DrawerContent className="mx-auto max-w-xl rounded-t-3xl bg-white px-6 pb-6">
         {step === 1 && (
           <div className="pt-4">
-            <div className="mb-1 flex items-center justify-center">
+            <div className="relative mb-4 flex items-center justify-center">
               <Typography variant="subtitle" level={2} className="font-semibold">
                 What Inspires You?
               </Typography>
@@ -212,7 +210,7 @@ export function AddToCrateDrawer() {
             <Typography variant="body" level={3} className="mb-4 text-gray-400">
               Pick up to {MAX_TAGS_PER_SLOT} (optional)
             </Typography>
-            <div className="mb-6 flex flex-wrap gap-2">
+            <div className="mb-6 flex flex-wrap gap-1">
               {getTagsForCategory(category).map((tag) => {
                 const selected = tags.includes(tag);
                 const disabled = atTagLimit && !selected;

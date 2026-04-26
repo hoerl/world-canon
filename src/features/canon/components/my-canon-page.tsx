@@ -48,6 +48,26 @@ function formatRelativeTime(iso: string): string {
   return `${Math.floor(seconds / 2592000)}mo ago`;
 }
 
+function dateSectionLabel(iso: string): string {
+  const date = new Date(iso);
+  const now = new Date();
+
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const diffDays = Math.floor((startOfToday.getTime() - new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime()) / 86_400_000);
+
+  if (diffDays < 0) return 'Today';
+  if (diffDays === 0) return 'Today';
+  if (diffDays === 1) return 'Yesterday';
+  if (diffDays < 7) return date.toLocaleDateString('en-US', { weekday: 'long' });
+  if (diffDays < 14) return 'Last Week';
+  if (diffDays < 30) return `${Math.floor(diffDays / 7)} Weeks Ago`;
+
+  if (date.getFullYear() === now.getFullYear()) {
+    return date.toLocaleDateString('en-US', { month: 'long' });
+  }
+  return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+}
+
 export function MyCanonPage({ session, canon, evolutions, agent }: MyCanonPageProps) {
   const { toast } = useToast();
   const router = useRouter();
@@ -115,9 +135,11 @@ export function MyCanonPage({ session, canon, evolutions, agent }: MyCanonPagePr
         <TopBar
           title="My Crate"
           startAdornment={
-            <Link href="/" aria-label="Close">
-              <Xmark className="h-5 w-5" />
-            </Link>
+            <Button size="icon" variant="tertiary" asChild>
+              <Link href="/" aria-label="Close">
+                <Xmark className="h-5 w-5" />
+              </Link>
+            </Button>
           }
           endAdornment={
             <Button size="icon" variant="tertiary" onClick={shareCanon} aria-label="Share">
@@ -131,7 +153,7 @@ export function MyCanonPage({ session, canon, evolutions, agent }: MyCanonPagePr
           </Typography>
         )}
 
-        <main className="flex-1 overflow-y-auto px-6">
+        <main className="flex-1 overflow-y-auto px-6 pb-4">
           <div className="flex flex-col items-center pt-4">
             <div className="mb-5 h-52 w-52 rounded-2xl bg-gray-900" />
 
@@ -151,36 +173,40 @@ export function MyCanonPage({ session, canon, evolutions, agent }: MyCanonPagePr
 
             <div className="mt-10 space-y-4 text-center">
               {canon && Object.values(canon.canon).some((slot) => slot !== null) && (
-                <Link href="/twins" className="block w-full text-base text-gray-400">
-                  Find Your Twins &gt;
+                <Link href="/twins" className="block w-full">
+                  <Typography variant="body" level={2} className="text-gray-400">
+                    Find Your Twins &gt;
+                  </Typography>
                 </Link>
               )}
               {evolutions.length > 0 && (
                 <button
                   type="button"
                   onClick={() => setHistoryOpen(true)}
-                  className="block w-full text-base text-gray-400"
+                  className="block w-full"
                 >
-                  View History &gt;
+                  <Typography variant="body" level={2} className="text-gray-400">
+                    View History &gt;
+                  </Typography>
                 </button>
               )}
               <button
                 type="button"
                 onClick={deployAgent}
-                className="block w-full text-base text-gray-400"
+                className="block w-full"
               >
-                Deploy Agent &gt;
+                <Typography variant="body" level={2} className="text-gray-400">
+                  Deploy Agent &gt;
+                </Typography>
               </button>
             </div>
           </div>
         </main>
 
         <div className="flex-none px-6 pb-8">
-          <div className="flex justify-center">
-            <Button variant="primary" size="lg" onClick={openAddDrawer}>
-              Add to Crate
-            </Button>
-          </div>
+          <Button variant="primary" size="lg" fullWidth onClick={openAddDrawer}>
+            Add to Crate
+          </Button>
         </div>
       </div>
 
@@ -191,18 +217,31 @@ export function MyCanonPage({ session, canon, evolutions, agent }: MyCanonPagePr
             startAdornment={null}
             endAdornment={
               <Button size="icon" variant="tertiary" onClick={() => setHistoryOpen(false)} aria-label="Close">
-                <Xmark className="h-4 w-4" />
+                <Xmark className="h-5 w-5" />
               </Button>
             }
           />
-          <div className="px-6">
-            {evolutions.map((evo, i) => (
-              <ListItem
-                key={`${evo.category}-${evo.evolved_at}-${i}`}
-                label={evo.new_title}
-                description={`${evo.category.toUpperCase()} · ${formatRelativeTime(evo.evolved_at)}`}
-              />
-            ))}
+          <div className="min-h-0 flex-1 overflow-y-auto">
+            <div className="flex flex-col gap-2 px-6 pb-6">
+              {evolutions.map((evo, i) => {
+                const section = dateSectionLabel(evo.evolved_at);
+                const prev = i > 0 ? dateSectionLabel(evolutions[i - 1].evolved_at) : null;
+                return (
+                  <div key={`${evo.category}-${evo.evolved_at}-${i}`}>
+                    {section !== prev && (
+                      <Typography variant="label" level={2} className={`${i > 0 ? 'pt-4' : ''} pb-1 text-gray-400`}>
+                        {section}
+                      </Typography>
+                    )}
+                    <ListItem
+                      label={evo.new_title}
+                      description={evo.new_rationale}
+                      endAdornment={<Chip label={evo.category.charAt(0).toUpperCase() + evo.category.slice(1)} variant="default" />}
+                    />
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </DrawerContent>
       </Drawer>

@@ -25,8 +25,8 @@ export function TwinCard({ twin, mySlug }: { twin: TwinMatch; mySlug: string }) 
     const sharedPick = twin.overlaps[0];
     const publicUrl = `${window.location.origin}/u/${mySlug}`;
     const message =
-      `We're taste twins on Crate! We both chose ${sharedPick.title}.\n` +
-      `Check out my crate: ${publicUrl}`;
+      `I like your taste. Especially ${sharedPick.title}.\n\n` +
+      `You might like this: ${publicUrl}`;
 
     try {
       await MiniKit.chat({ message });
@@ -36,13 +36,13 @@ export function TwinCard({ twin, mySlug }: { twin: TwinMatch; mySlug: string }) 
   };
 
   return (
-    <div className="rounded-3xl border border-gray-200 bg-white p-5">
+    <div className="rounded-3xl border border-gray-200 bg-white p-4">
       <div className="flex items-start justify-between">
         <div className="min-w-0 flex-1">
           <Typography variant="subtitle" level={1}>
             {twin.username ?? twin.slug}
           </Typography>
-          <Typography variant="body" level={3} className="mt-0.5 text-gray-400">
+          <Typography variant="body" level={3} className="mt-1 text-gray-400">
             @{twin.slug}
           </Typography>
         </div>
@@ -51,11 +51,11 @@ export function TwinCard({ twin, mySlug }: { twin: TwinMatch; mySlug: string }) 
         </Button>
       </div>
 
-      <div className="mt-3 space-y-1.5">
+      <div className="mt-3 space-y-2">
         {twin.overlaps.map((overlap) => (
           <div key={`${overlap.category}-${overlap.title}`} className="flex items-center gap-2">
             <Chip label={categoryLabel[overlap.category]} variant="default" />
-            <Typography variant="body" level={3} className="text-gray-600">
+            <Typography variant="body" level={3} className="text-gray-500">
               You both chose <span className="font-medium text-gray-900">{overlap.title}</span>
             </Typography>
           </div>
