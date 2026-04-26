@@ -43,6 +43,19 @@ A trend-follower who picks whatever is currently hyped does NOT qualify. Someone
 - A worldview that connects culture, space, and objects into a personal philosophy
 Someone with random, disconnected picks across slots does NOT qualify. Someone whose three choices reveal a unified creative sensibility — even if eclectic — DOES.`,
   },
+  {
+    id: 'the-group-chat',
+    name: 'The Group Chat',
+    tagline: 'Taste-gated Telegram. No lurkers.',
+    criteria: 'Would your taste add signal to the conversation, or just noise?',
+    evaluationPrompt: `Evaluate whether this person's Crate earns them a seat in a taste-gated Telegram group chat — a small, opinionated cultural conversation where every member pulls their weight. This is NOT about matching a single aesthetic. Look for:
+- Strong positions: do their rationales show conviction, not hedging? A good group chat member has TAKES, not just preferences
+- Specificity over breadth: do they pick precise, defensible choices or vague crowd-pleasers?
+- Complementary angles: would their Person/Place/Thing combination bring a perspective the group doesn't already have? Eclectic is good. Generic is not.
+- Evolution that shows engagement: have they changed their mind? Argued with their own past taste? That's the person who makes a group chat interesting.
+- The lurker test: could you imagine them STARTING a conversation thread, not just reacting to one?
+Someone whose Crate reads like safe, consensus taste does NOT qualify. Someone who'd drop a hot take at 2am that starts a 47-message thread DOES.`,
+  },
 ];
 
 export function getGateById(id: string): TasteGate | undefined {
