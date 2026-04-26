@@ -16,9 +16,11 @@ The app should feel like holding a personal publication. Minimal chrome, strong 
 |--------|-------|---------|------|
 | Landing | `/` (unauthed) | Immersive first impression — hero headline, value props, CTA | None |
 | Sign In | MiniKit sheet | World App native (not customizable) | Triggered |
-| Home / Earth | `/` (authed) | Global crate feed — humanity's top persons, places, things | Wallet |
+| Home | `/` (authed) | "Taste of Humanity" — global crate feed with Earth sphere | Wallet |
+| Taste Twins | `/twins` | Discover verified humans who share your picks — Say Hi via World Chat | Wallet + World ID |
 | My Crate | `/me` | View/edit personal crate — conversational drawer editor | Wallet + World ID |
 | Public Crate | `/u/[slug]` | Shareable crate card | Public |
+| Gift Finder | `/demo/shopper` | Claude-powered gift recommendations from any crate | Public |
 
 ## World Mini App Constraints
 
@@ -129,7 +131,7 @@ Use `BottomBar` from the UI Kit for bottom-of-screen action rows. Not to be conf
 | Mixed bottom row (icons + center CTA, like Earth screen) | `BottomBar` | 2 nav icons + 1 primary CTA — not all slots are peer destinations |
 | Section-switching nav (peer tabs) | `Tabs` + `TabItem` | N peer destinations, all same shape (icon + label); supports "With Links" pattern for App Router |
 
-The v06 bottom row (search · Add to Crate · profile) is **`BottomBar`**, not `Tabs`.
+The bottom row (twins · Add to Crate · profile) is **`BottomBar`**, not `Tabs`.
 
 ## Button — Canonical Use Map
 
@@ -165,7 +167,7 @@ Example: profile icon in `BottomBar` renders `solid/User` when route is `/me`, `
 | Back | `ArrowLeft` | Drawer back navigation |
 | Share | `ShareIos` | TopBar end (My Crate share) |
 | Send | `Airplane` | Input end-adornment (Add to Crate submit) |
-| Search | `Search` | BottomBar search slot |
+| Taste Twins | `Group` | BottomBar twins slot |
 | Profile (inactive) | `User` | BottomBar profile slot |
 | Profile (active) | `UserSolid` | BottomBar profile slot when on `/me` |
 
