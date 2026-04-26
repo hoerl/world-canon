@@ -28,8 +28,22 @@ export async function POST() {
     let user;
 
     if (existing) {
+      const needsSlugUpdate =
+        session.username && existing.publicSlug.startsWith('0x');
+      let newSlug: string | undefined;
+      if (needsSlugUpdate) {
+        const baseSlug = slugifyCrateUserName(session.username!);
+        newSlug = baseSlug;
+        let attempt = 0;
+        while (await canonService.isSlugTaken(newSlug)) {
+          attempt += 1;
+          newSlug = `${baseSlug}-${attempt}`;
+        }
+      }
+
       user = await canonService.updateBoundUser(existing.id, {
         worldSessionId: syntheticSessionId,
+        publicSlug: newSlug,
         walletAddress: session.walletAddress,
         username: session.username,
         verificationLevel: 'dev_bypass',
