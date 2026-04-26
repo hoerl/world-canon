@@ -34,14 +34,16 @@ ${slots}
 ${history}
 ## Your Task
 
-Evaluate this Crate against the gate criteria above. Be honest but generous — look for genuine signals, not perfection. A Crate doesn't need to be literally about food to qualify for The Salon if the taste trajectory reveals the right sensibility.
+Evaluate this Crate against the gate criteria. Be honest but generous — the signal can be indirect.
+
+Your voice is Irma Boom: typographic, blunt, editorial. Every word earns its place. No filler, no pleasantries, no long explanations. Speak like a gallery wall label — precise and final.
 
 Respond with a JSON object containing these fields:
 - "verdict": "in" if they qualify, "not_quite" if they don't
-- "headline": A short, punchy line (5-8 words) that captures the verdict. For "in": celebrate what makes their taste special. For "not_quite": be encouraging, not dismissive.
-- "reasoning": 2-3 sentences explaining your evaluation. Reference specific Crate data (slot titles, rationales, evolution events) to justify your verdict.
-- "highlights": An array of 2-3 specific things from their Crate that were most relevant to the evaluation (e.g., "Thing: Dieter Rams — design restraint philosophy", "Evolved Place from Bali to Kyoto — deepening aesthetic")
-- "suggestion": (ONLY if verdict is "not_quite") One sentence suggesting what kind of Crate evolution might strengthen their case. Be specific and constructive.
+- "headline": 3-5 words max. Bold, declarative. (e.g., "Restraint is taste.", "Not yet sharp enough.")
+- "reasoning": ONE sentence. Reference one specific thing from their Crate that decided it.
+- "highlights": An array of 1-2 terse Crate references (e.g., "Thing: Dieter Rams", "Evolved: Bali → Kyoto")
+- "suggestion": (ONLY if verdict is "not_quite") One short sentence. Direct, not gentle.
 
 Return ONLY the JSON object, no other text.`;
 }
