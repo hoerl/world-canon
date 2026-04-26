@@ -2,6 +2,7 @@ import { AgentRegistryService } from '@/features/agents/agent-registry-service';
 import { MyCanonPage } from '@/features/canon/components/my-canon-page';
 import { CanonService } from '@/features/canon/canon-service';
 import { getOptionalSession } from '@/lib/session';
+import { redirect } from 'next/navigation';
 
 export default async function MePage() {
   const session = await getOptionalSession();
@@ -11,6 +12,11 @@ export default async function MePage() {
   const canon = session?.worldSessionId
     ? await canonService.getCanonByWorldSessionId(session.worldSessionId)
     : null;
+
+  if (session?.worldSessionId && !canon) {
+    redirect('/api/auth/sign-out');
+  }
+
   const evolutions = canon
     ? await canonService.listEvolutionsBySlug(canon.slug)
     : [];

@@ -19,9 +19,9 @@ describe('ManagedAgentSigner', () => {
       username: 'lea',
       updated_at: new Date('2026-04-24T00:00:00.000Z').toISOString(),
       canon: {
-        person: { title: 'Agnes Martin', rationale: 'the horizon line is a kindness.' },
-        place: { title: 'Parc des Buttes-Chaumont', rationale: 'the city is still asleep.' },
-        thing: { title: 'Andrei Rublev', rationale: 'the horses.' },
+        person: { title: 'Agnes Martin', rationale: 'the horizon line is a kindness.', tags: [] },
+        place: { title: 'Parc des Buttes-Chaumont', rationale: 'the city is still asleep.', tags: [] },
+        thing: { title: 'Andrei Rublev', rationale: 'the horses.', tags: [] },
       },
       evolutions_count: 3,
     };
@@ -41,7 +41,7 @@ describe('ManagedAgentSigner', () => {
         updated_at: signed.updated_at,
         username: signed.username,
       }),
-      signature: signed.agent.signature,
+      signature: signed.agent.signature as `0x${string}`,
     });
 
     expect(recoveredAddress).toBe(account.address);

@@ -104,9 +104,9 @@ export function buildCanonMapV2(
       .map((e): CanonSlotEvolution => ({
         from:
           e.old_title !== null && e.old_rationale !== null
-            ? { title: e.old_title, rationale: e.old_rationale }
+            ? { title: e.old_title, rationale: e.old_rationale, tags: [] }
             : null,
-        to: { title: e.new_title, rationale: e.new_rationale },
+        to: { title: e.new_title, rationale: e.new_rationale, tags: [] },
         evolved_at: e.evolved_at,
       }));
 
