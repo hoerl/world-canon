@@ -1,23 +1,20 @@
-# Canon
-Canon is a taste identity primitive to Verify your Uniqueness. 
+# Crate
+Crate is a taste identity primitive to Verify your Uniqueness. 
 
-Every verified human has one Canon comprised of their favorite people, places, or things. 
+Every verified human has a Create comprised of their favorite people, places, or things. 
 
-This is your permanent taste profile that helps your improve your experience on the agentic web. 
+This is your persistent taste profile that helps your improve your experience on the agentic web. 
 
-Other mini apps can read it. Your Canon-Agent speaks for it. World Chat shares it. 
+Each Crate taste record stores a title and a short rationale. 
 
-Canon is a World Mini App that gives each verified human one portable canon made up of a `Person`, a `Place` or a `Thing`.
-
-Each canon slot stores a title and a short rationale. The app supports:
+The app supports:
 
 - Wallet Auth session login
 - World ID 4.0 human binding
-- canon creation and evolution history
-- public canon reads
-- Earth aggregation
-- managed Canon-Agent provisioning
-- signed agent-readable canon responses
+- Crate creation and evolution history
+- public crate reads
+- managed crate-agent provisioning
+- signed agent-readable crate responses
 
 ## Stack
 
