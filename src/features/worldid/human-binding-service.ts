@@ -96,7 +96,17 @@ export class HumanBindingService {
 
     const existingUser = await this.canonService.getUserByWorldSessionId(parsed.data.session_id);
     if (existingUser) {
+      const needsSlugUpdate =
+        walletSession.username && existingUser.publicSlug.startsWith('0x');
+      let newSlug: string | undefined;
+      if (needsSlugUpdate) {
+        newSlug = await this.reserveSlug(
+          slugifyCrateUserName(walletSession.username!),
+        );
+      }
+
       return this.canonService.updateBoundUser(existingUser.id, {
+        publicSlug: newSlug,
         walletAddress: walletSession.walletAddress,
         username: walletSession.username,
         verificationLevel: 'proof_of_human',

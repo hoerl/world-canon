@@ -49,10 +49,19 @@ export class SessionAuthService {
     }
 
     const existingUser = await this.canonService.getUserByWalletAddress(parsed.data.payload.address);
+    const username = parsed.data.profile?.username ?? existingUser?.worldUsername ?? null;
+
+    if (existingUser && username && !existingUser.worldUsername) {
+      await this.canonService.updateBoundUser(existingUser.id, {
+        username,
+        walletAddress: existingUser.walletAddress,
+        verificationLevel: existingUser.verificationLevel,
+      });
+    }
 
     return {
       walletAddress: parsed.data.payload.address,
-      username: parsed.data.profile?.username ?? existingUser?.worldUsername ?? null,
+      username,
       profilePictureUrl: parsed.data.profile?.profilePictureUrl ?? null,
       worldSessionId: existingUser?.worldSessionId
         ? (existingUser.worldSessionId as `session_${string}`)
